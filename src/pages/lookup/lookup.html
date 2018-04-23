@@ -1,0 +1,90 @@
+<!--
+  Generated template for the LookupPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>lookup</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<!-- class="no-scroll" -->
+
+<ion-content class="lookup">
+
+  <ion-card *ngFor="let car of cars">
+
+    <ion-item>
+      <ion-avatar item-start>
+        <img src="assets/img/car_vip.png">
+      </ion-avatar>
+      <h2>{{car.label}}</h2>
+      <p>{{car.description}}</p>
+      <ion-avatar item-end>
+        <div class="time-ride">{{car.time}} min</div>
+        <div class="mile-ride"><small>{{car.distance}} mile</small></div>
+      </ion-avatar>
+    </ion-item>
+  <!-- (click)="requestRide(car)" -->
+    <ion-row class="action-ride">
+      <ion-col>
+        <button ion-button icon-left clear small (click)="requestRide(car)" >
+          <ion-icon name="md-car"></ion-icon>
+          <div class="text-ride">Get ride</div>
+        </button>
+      </ion-col>
+      <ion-col center text-center>
+        <button ion-button icon-left clear small outline>
+          <ion-icon name="md-cash"></ion-icon>
+          <div class="price-ride">{{car.price}}/mile</div>
+        </button>
+      </ion-col>
+      <ion-col>
+        <button ion-button icon-left clear small (click)="viewDetail(car)">
+          <ion-icon name="ios-information-circle-outline"></ion-icon>
+          <div class="text-ride">Details</div>
+        </button>
+      </ion-col>
+    </ion-row>
+  
+  </ion-card>
+  
+  <div *ngIf="showDetail" class="detail-ride">
+      <button ion-button icon-left clear  outline color="danger" (click)="closeDetails()">
+          <ion-icon name="md-close-circle"></ion-icon>
+        </button>
+      <div class="text" text-center>
+          <ion-grid>
+              <ion-row>
+                 <ion-col>
+                    <button  icon-start ion-item color="primary">
+                    <ion-icon name="cash"></ion-icon>
+                    Cash
+                    </button>
+                    <button icon-start ion-item color="primary">
+                    <ion-icon name="card"></ion-icon>
+                    Card
+                    </button>
+                    <button icon-start ion-item color="primary">
+                    <ion-icon name="cash"></ion-icon>
+                    <ion-icon name="create"></ion-icon>
+                    Cash
+                    </button>
+                 </ion-col>
+                 <ion-col>
+                    <button [ngStyle]="{'bottom': 0 + 'px'}" icon-start ion-item color="primary">
+                    <ion-icon name="calculator"></ion-icon>
+                    Estimate
+                    </button>
+                 </ion-col>
+              </ion-row>
+           </ion-grid>
+      </div>
+
+   </div>
+</ion-content>
+

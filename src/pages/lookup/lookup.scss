@@ -1,0 +1,47 @@
+page-lookup {
+    .lookup{
+        background: grey;
+    }
+    .action-ride{
+        border-top: 1px solid #e2e2e2;
+    }
+    .time-ride{
+        color: green;
+        text-align: right
+    }
+    .mile-ride{
+        text-align: right
+    }
+    .price-ride{
+        color:red;
+        text-transform: none;
+    }
+    .text-ride{
+        color:black;
+        text-transform: none;
+    }
+
+    .detail-ride {
+        height: 100%;
+        width: 100%;
+        background: #FFFFFF;
+        position: absolute;
+        margin: -50px 0 0 -50px;
+        margin-left: 0%;
+        bottom: 0%;
+        z-index: 1;
+        border-top: 1px solid color($colors, nav-border-bottom, base);
+        animation-direction: alternate;
+        animation-name: bump;
+        animation-duration: 0.3s;
+        animation-iteration-count: 1;
+  
+        .btn_cancel{
+          
+        ion-icon{
+          font-size: 2em;
+          top: 10px;
+        }
+      }
+    }
+}

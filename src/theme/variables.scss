@@ -5,11 +5,10 @@
 // roboto, and noto sans fonts
 $font-path: "../assets/fonts";
 
-
 // The app direction is used to include
 // rtl styles in your app. For more info, please see:
 // http://ionicframework.com/docs/theming/rtl-support/
-$app-direction: ltr;
+//$app-direction: ltr;
 
 
 @import "ionic.globals";
@@ -22,6 +21,7 @@ $app-direction: ltr;
 // To view all the possible Ionic variables, see:
 // http://ionicframework.com/docs/theming/overriding-ionic-variables/
 
+$myUrl: '../assets/img/logo-bg.png';
 
 
 
@@ -34,11 +34,20 @@ $app-direction: ltr;
 // The "primary" color is the only required color in the map.
 
 $colors: (
-  primary:    #488aff,
-  secondary:  #32db64,
+  primary:    #5F96F5,
+  secondary:  rgba(255, 255, 255, 0.92),
   danger:     #f53d3d,
   light:      #f4f4f4,
-  dark:       #222
+  dark:       #E2E2E2,
+  doom:       #BBBBBB,
+  nav-border-bottom: rgba(190, 188, 188, 0.93),
+  nav-color: rgb(253, 253, 253),
+  bar-color: #FFFFFF,
+  deep: #535252,
+  gery: rgba(25, 196, 84, 0.91),
+  toper:    rgba(164, 190, 233, 0.28),
+  doper:    rgba(19, 38, 72, 0.46),
+  lighters: rgba(91, 144, 233, 0.28)
 );
 
 
