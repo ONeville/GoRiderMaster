@@ -16,3 +16,6 @@ https://www.youtube.com/watch?v=Z3HdOTQ8YHI&index=1&list=PLxabZQCAe5fgXx8cn2iKOt
         <preference name="loadUrlTimeoutValue" value="700000" />
     
 
+https://angularfirebase.com/lessons/geofire-location-queries-with-google-maps/
+
+https://github.com/firebase/geofire-js/tree/master/examples

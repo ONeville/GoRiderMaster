@@ -32,9 +32,9 @@ export class LookupPage {
 
   ionViewDidLoad() {
     this.loadCars();
-    this.getUserLocation()
-    this.subscription = this.geoFire.hits
-        .subscribe(hits => this.markers = hits)
+    // this.getUserLocation()
+    // this.subscription = this.geoFire.hits
+    //     .subscribe(hits => this.markers = hits)
   }
 
   loadCars(){
@@ -46,10 +46,7 @@ export class LookupPage {
   }
 
   viewDetail(item){
-
-
     let geocoder = new google.maps.Geocoder;
-    
     geocoder.geocode( { 'address': this.currentLocation}, (results, status) => {
       if (status == 'OK') {
         let dd = results[0].geometry.location;

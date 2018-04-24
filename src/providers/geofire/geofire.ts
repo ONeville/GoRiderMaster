@@ -17,9 +17,10 @@ export class GeofireProvider {
   hits = new BehaviorSubject([])
   
   constructor() {
-    
-    this.dbRef = firebase.database().ref();
-    this.geoFire = new GeoFire(this.dbRef.$ref);
+    let db =  firebase.database();
+
+    // this.dbRef = new firebase.database().ref();
+    // this.geoFire = new GeoFire(this.dbRef.$ref);
   }
 
      /// Adds GeoFire data to database
