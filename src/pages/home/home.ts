@@ -15,6 +15,7 @@ import { GeocoderProvider } from '../../providers/geocoder/geocoder';
 import { Geolocation } from '@ionic-native/geolocation';
 import * as firebase from 'firebase/app';
 import { Storage } from '@ionic/storage';
+import * as GeoFire from "geofire";
 //import { Vibration } from '@ionic-native/vibration';
 //import { RatePage } from '../../pages/rate/rate';
 import { Diagnostic } from '@ionic-native/diagnostic';
@@ -55,9 +56,11 @@ export class HomePage implements AfterViewInit  {
   startedNavigation: boolean = false;
   destinationSetName: any;
   added: boolean = true;
-  lat: any;
-  lng: any;
   price: any;
+
+  locationLatLng: any;
+  destinationLatLng: any;
+  geocoder: any = new google.maps.Geocoder;
 
 
   enablePickupLocation: boolean = false;
@@ -93,7 +96,7 @@ export class HomePage implements AfterViewInit  {
 
   ionViewDidLoad(){
 
-      this.locactionControls.push(this.destinationLocationControl)
+    this.locactionControls.push(this.destinationLocationControl)
    
     const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
       if (!user) {
@@ -118,17 +121,14 @@ export class HomePage implements AfterViewInit  {
 
 
   WaitForGeolocation(){
-  //   console.log(this.cMap.lat)
     let location_tracker_loop = setTimeout(()=>{
       if (this.cMap.hasShown){
         clearTimeout(location_tracker_loop)
-        this.showMap();
-        console.log("connected")
       }else{
        this.WaitForGeolocation()
       }
       }, 1000)
-   }
+  }
 
   
    toggleMoreBtn(){
@@ -147,46 +147,34 @@ export class HomePage implements AfterViewInit  {
    }
 
 
-  showMap(){
-    this.lat = this.cMap.lat;
-    this.lng = this.cMap.lng;
-    this.CheckForPreviousData();
-    //console.log('woe');
-  }
-
-
   showAddressModal (selectedBar) {
     clearTimeout(this.cMap.timer1)
-    //console.log(this.myGcode.locationName)
     let modal = this.modalCtrl.create('AutocompletePage', { country: this.ph.currentCountry, labelIndex: selectedBar });
     modal.onDidDismiss(data => {
       this.address.place = data;
     if (selectedBar == 1 && data != null){
       if (!this.startedNavigation){
-      document.getElementById("location").innerText = data;
-      this.myGcode.locationName = data
-      this.cMap.RefreshMap(data)
+        this.updateLocation(selectedBar, data)
+
+        this.geocoder.geocode( { 'address': data}, (results, status) => {
+          if (status == 'OK') {
+            this.locationLatLng = results[0].geometry.location;
+          //  console.log(this.locationLatLng.lat(), this.locationLatLng.lng());
+          } else { alert('Geocode was not successful for the following reason: ' + status); }
+        });
+
       }
     }
     if (selectedBar == 2 && data != null){
-      document.getElementById("destination").innerText = data;
+      this.updateLocation(selectedBar, data)
       this.destinationSetName = data
-      let myPos = new google.maps.LatLng(this.cMap.lat, this.cMap.lng)
-      this.myGcode.geocoder.geocode( { 'address': data}, (results, status) => {
+
+      this.geocoder.geocode( { 'address': data}, (results, status) => {
         if (status == 'OK') {
-          var position = results[0].geometry.location
-          let calPos = new google.maps.LatLng(position.lat(), position.lng())
-          if (!this.dProvider.calculateBtn){
-            this.dProvider.calcRoute(myPos, calPos, false, true, data)
-            //console.log(data);
-            
-             }else{
-               //console.log(data);
-              this.dProvider.calcRoute(myPos, calPos, false, false, data)
-          }
+          this.destinationLatLng = results[0].geometry.location;
+        //  console.log(this.destinationLatLng.lat(), this.destinationLatLng.lng());
         } else {
-          
-         // alert('Geocode was not successful for the following reason: ' + status);
+         alert('Geocode was not successful for the following reason: ' + status);
         }
       });
       
@@ -230,18 +218,35 @@ export class HomePage implements AfterViewInit  {
       this.locactionControls.push(this.currentLocationControl);
       this.locactionControls.push(this.destinationLocationControl);
     }else{
-      var index = this.locactionControls.indexOf(this.currentLocationControl);
-      this.locactionControls.splice(index, 1);
+      // var index = this.locactionControls.indexOf(this.currentLocationControl);
+      this.locactionControls.splice(this.locactionControls.indexOf(this.currentLocationControl), 1);
+      // this.locactionControls.splice(index, 1);
+    }
+  }
+
+  updateLocation(selector, data){
+    if (selector) {
+      this.locactionControls.splice(this.locactionControls.indexOf(this.currentLocationControl), 1);
+      this.locactionControls.push({
+        id: 1,
+        label: data,
+        icon: 'md-locate'
+      });
+    } else {
+      this.locactionControls.splice(this.locactionControls.indexOf(this.currentLocationControl), 1);
+      this.locactionControls.push({
+        id: 2,
+        label: data,
+        icon: 'md-pin'
+      });
     }
   }
 
   findDrivers(){
-    // let bottomBar1 = document.getElementById("bar2").style.display = 'block'
-    // this.navCtrl.push('LookupPage');
     this.cMap.onbar2 = true
     this.onDriverRequest = !this.onDriverRequest;
     setTimeout(()=>{
-      this.navCtrl.push('LookupPage');
+     this.navCtrl.push('LookupPage', { currentLocation: this.address.place });
      }, 1000)
   }
 
@@ -356,24 +361,24 @@ export class HomePage implements AfterViewInit  {
 
 
   CreatePushNotification(){
-  let current_id = this.cMap.car_notificationIds[this.NotifyTimes]
+      let current_id = this.cMap.car_notificationIds[this.NotifyTimes]
 
-    if (this.platform.is('cordova'))
-      //console.log(current_id);  
-      this.OneSignal.sendPush(current_id)
+        if (this.platform.is('cordova'))
+          //console.log(current_id);  
+          this.OneSignal.sendPush(current_id)
 
-  console.log(this.cMap.car_notificationIds.length, this.NotifyTimes)
-  if ( this.NotifyTimes < this.cMap.car_notificationIds.length){
-    this.startWaitingForResponse();
-    this.timeTonotify = setTimeout(()=>{
-      this.ClearInformation()
-     }, this.timerBeforeNotify)
-  }else{
-    clearTimeout(this.timeTonotify)
-    this.pop.clearAll(this.uid, true);
-    console.log(this.NotifyTimes)
-   
-  }
+      console.log(this.cMap.car_notificationIds.length, this.NotifyTimes)
+      if ( this.NotifyTimes < this.cMap.car_notificationIds.length){
+        this.startWaitingForResponse();
+        this.timeTonotify = setTimeout(()=>{
+          this.ClearInformation()
+        }, this.timerBeforeNotify)
+      }else{
+        clearTimeout(this.timeTonotify)
+        this.pop.clearAll(this.uid, true);
+        console.log(this.NotifyTimes)
+      
+      }
   }
 
 
@@ -396,11 +401,6 @@ export class HomePage implements AfterViewInit  {
   
       if (pay == null){
         pay = 1
-      }
-  
-      if (this.cMap.lat == null && this.cMap.lng == null){
-        this.cMap.lat = this.lat 
-        this.cMap.lng = this.lng
       }
   
       this.createUserInformation(name, image, this.cMap.lat, this.cMap.lng, this.myGcode.locationName, pay);

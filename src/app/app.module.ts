@@ -44,6 +44,7 @@ export const firebaseConfig = {
 
 import { MyApp } from './app.component';
 import { ModalContentPage } from '../pages/lookup/driver-detail';
+import { GeofireProvider } from '../providers/geofire/geofire';
 
 firebase.initializeApp(firebaseConfig);
 
@@ -79,7 +80,8 @@ firebase.initializeApp(firebaseConfig);
     Geolocation,
     OneSignal,
     Diagnostic,
-    GoogleMaps
+    GoogleMaps,
+    GeofireProvider
   ]
 })
 export class AppModule {}

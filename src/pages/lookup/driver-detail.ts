@@ -15,6 +15,9 @@ import { Platform, NavParams, ViewController } from 'ionic-angular';
     ) {
 
     let data = this.params.get('data')
+    let location = this.params.get('location')
+
+    let locationText = location.lat() + ' - ' + location.lng()
     
       this.character = {
         name: data.label,
@@ -23,7 +26,8 @@ import { Platform, NavParams, ViewController } from 'ionic-angular';
         items: [
           { title: 'Price', note: data.price + ' per mile' },
           { title: 'Distance', note: data.distance + 'miles' },
-          { title: 'Time', note: data.time + ' min' }
+          { title: 'Time', note: data.time + ' min' },
+          { title: 'Current Location', note: locationText }
         ]
       };
     }

@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { ModalController, IonicPage, NavController, NavParams } from 'ionic-angular';
 
 import { ModalContentPage } from './driver-detail';
+import { GeofireProvider } from '../../providers/geofire/geofire';
+declare var google;
 /**
  * Generated class for the LookupPage page.
  *
@@ -17,12 +19,22 @@ import { ModalContentPage } from './driver-detail';
 export class LookupPage {
   cars:any = []
   showDetail: boolean = false
-  constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController) {
+  currentLocation: any
+  destination: any
+  lat: number;
+  lng: number;
+  markers: any;
+  subscription: any;
 
+  constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController, public geoFire: GeofireProvider) {
+    this.currentLocation = this.navParams.get('currentLocation')
   }
 
   ionViewDidLoad() {
     this.loadCars();
+    this.getUserLocation()
+    this.subscription = this.geoFire.hits
+        .subscribe(hits => this.markers = hits)
   }
 
   loadCars(){
@@ -34,13 +46,51 @@ export class LookupPage {
   }
 
   viewDetail(item){
-    this.showDetail = !this.showDetail
+
+
+    let geocoder = new google.maps.Geocoder;
+    
+    geocoder.geocode( { 'address': this.currentLocation}, (results, status) => {
+      if (status == 'OK') {
+        let dd = results[0].geometry.location;
+        let modal = this.modalCtrl.create(ModalContentPage, { data: item, location: dd});
+        modal.present();
+      } else {
+       alert('Geocode was not successful for the following reason: ' + status);
+      }
+    });
+    
   }
 
   requestRide(item){
-    // let characterNum = {charNum: 0}
-    let modal = this.modalCtrl.create(ModalContentPage, { data: item});
-    modal.present();
+    this.showDetail = !this.showDetail
+  }
+
+  seedDatabase() {
+    let dummyPoints = [
+      [37.9, -122.1],
+      [38.7, -122.2],
+      [38.1, -122.3],
+      [38.3, -122.0],
+      [38.7, -122.1]
+    ]
+  
+    dummyPoints.forEach((val, idx) => {
+      let name = `dummy-location-${idx}`
+      console.log(idx)
+      this.geoFire.setLocation(name, val)
+    })
+  }
+
+  getUserLocation() {
+    /// locate the user
+    if (navigator.geolocation) {
+       navigator.geolocation.getCurrentPosition(position => {
+        this.lat = position.coords.latitude;
+        this.lng = position.coords.longitude;
+        this.geoFire.getLocations(100, [this.lat, this.lng])
+      });
+    }
   }
 
   closeDetails(){
