@@ -17,7 +17,7 @@ import { Platform, NavParams, ViewController } from 'ionic-angular';
     let data = this.params.get('data')
     let location = this.params.get('location')
 
-    let locationText = location.lat() + ' - ' + location.lng()
+    let locationText = location.lat + ' - ' + location.lng
     
       this.character = {
         name: data.label,

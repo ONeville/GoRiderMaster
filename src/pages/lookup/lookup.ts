@@ -3,7 +3,7 @@ import { ModalController, IonicPage, NavController, NavParams } from 'ionic-angu
 
 import { ModalContentPage } from './driver-detail';
 import { GeofireProvider } from '../../providers/geofire/geofire';
-declare var google;
+
 /**
  * Generated class for the LookupPage page.
  *
@@ -17,24 +17,28 @@ declare var google;
   templateUrl: 'lookup.html',
 })
 export class LookupPage {
-  cars:any = []
-  showDetail: boolean = false
-  currentLocation: any
-  destination: any
+  cars:any = [];
+  showDetail: boolean = false;
+  locations: any;
+  destination: any;
   lat: number;
   lng: number;
   markers: any;
   subscription: any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController, public geoFire: GeofireProvider) {
-    this.currentLocation = this.navParams.get('currentLocation')
+    this.locations = this.navParams.get('locations')
   }
 
   ionViewDidLoad() {
     this.loadCars();
-    // this.getUserLocation()
+    // this.getLocation(this.locations.current.lat, this.locations.current.lng)
+    // // this.getUserLocation()
     // this.subscription = this.geoFire.hits
-    //     .subscribe(hits => this.markers = hits)
+    //     .subscribe(hits => {
+    //       this.markers = hits
+    //       console.log('HITS: ' + JSON.stringify(hits));
+    //     })
   }
 
   loadCars(){
@@ -46,16 +50,20 @@ export class LookupPage {
   }
 
   viewDetail(item){
-    let geocoder = new google.maps.Geocoder;
-    geocoder.geocode( { 'address': this.currentLocation}, (results, status) => {
-      if (status == 'OK') {
-        let dd = results[0].geometry.location;
-        let modal = this.modalCtrl.create(ModalContentPage, { data: item, location: dd});
-        modal.present();
-      } else {
-       alert('Geocode was not successful for the following reason: ' + status);
-      }
-    });
+
+    let modal = this.modalCtrl.create(ModalContentPage, { data: item, location: this.locations.current});
+    modal.present();
+
+    // let geocoder = new google.maps.Geocoder;
+    // geocoder.geocode( { 'address': this.locations}, (results, status) => {
+    //   if (status == 'OK') {
+    //     let dd = results[0].geometry.location;
+    //     let modal = this.modalCtrl.create(ModalContentPage, { data: item, location: dd});
+    //     modal.present();
+    //   } else {
+    //    alert('Geocode was not successful for the following reason: ' + status);
+    //   }
+    // });
     
   }
 
@@ -63,22 +71,27 @@ export class LookupPage {
     this.showDetail = !this.showDetail
   }
 
-  seedDatabase() {
-    let dummyPoints = [
-      [37.9, -122.1],
-      [38.7, -122.2],
-      [38.1, -122.3],
-      [38.3, -122.0],
-      [38.7, -122.1]
-    ]
+  // seedDatabase() {
+  //   let dummyPoints = [
+  //     [37.9, -122.1],
+  //     [38.7, -122.2],
+  //     [38.1, -122.3],
+  //     [38.3, -122.0],
+  //     [38.7, -122.1]
+  //   ]
   
-    dummyPoints.forEach((val, idx) => {
-      let name = `dummy-location-${idx}`
-      console.log(idx)
-      this.geoFire.setLocation(name, val)
-    })
-  }
+  //   dummyPoints.forEach((val, idx) => {
+  //     let name = `dummy-location-${idx}`
+  //     console.log(idx)
+  //     this.geoFire.setLocation(name, val)
+  //   })
+  // }
+  getLocation(lat, lng) {
+    /// locate the user
+    this.geoFire.getLocations(100, [lat, lng])
+    console.log('HITS GET: ' + JSON.stringify(this.geoFire.hits));
 
+  }
   getUserLocation() {
     /// locate the user
     if (navigator.geolocation) {

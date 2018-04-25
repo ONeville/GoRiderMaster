@@ -5,23 +5,28 @@
        </button>
        <ion-title [ngStyle]="{'font-size': 1.32 + 'em', 'text-align': 'center'}" [hidden]="!pop.onRequest" id="header" >Please Wait..</ion-title>
        <ion-title [hidden]="pop.onRequest">
-          RiderGo 
+          C O R I A 
        </ion-title>
        <!-- <ion-toggle  checked="false" float-right>current Location</ion-toggle> -->
-       <button [hidden]="pop.onRequest" ion-button icon-only clear float-right (click)="pickLocation()">
+       <!-- <button [hidden]="pop.onRequest" ion-button icon-only clear float-right (click)="pickLocation()">
           <ion-icon name="md-locate"></ion-icon>
-       </button>
+       </button> -->
     </ion-navbar>
  </ion-header>
  <ion-content class="no-scroll">
     <div id="map">
        <div class="bars">
-            <ion-list class="locaction-control" *ngFor="let item of locactionControls">
-                    <ion-item no-lines (click)="showAddressModal(item.id)">
-                        <ion-icon name="ios-search-outline" item-start></ion-icon>
-                            {{ item.label }}
-                        <ion-icon [name]="item.icon" item-end></ion-icon>
+            <ion-list class="locaction-control">
+                    <ion-item no-lines (click)="showAddressModal(currentLocationControl.id)">
+                        <ion-icon name="ios-search-outline" item-start small></ion-icon>
+                            {{ currentLocationControl.label }}
+                        <ion-icon [name]="currentLocationControl.icon" item-end></ion-icon>
                     </ion-item>
+                    <ion-item no-lines (click)="showAddressModal(destinationLocationControl.id)">
+                            <ion-icon name="ios-search-outline" item-start small></ion-icon>
+                                {{ destinationLocationControl.label }}
+                            <ion-icon [name]="destinationLocationControl.icon" item-end></ion-icon>
+                        </ion-item>
             </ion-list>
             <div [hidden]="!cMap.hasRequested" class="bars-position">
                 <ion-icon name="navigate"></ion-icon>

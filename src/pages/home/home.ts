@@ -15,7 +15,7 @@ import { GeocoderProvider } from '../../providers/geocoder/geocoder';
 import { Geolocation } from '@ionic-native/geolocation';
 import * as firebase from 'firebase/app';
 import { Storage } from '@ionic/storage';
-import * as GeoFire from "geofire";
+import { GeofireProvider } from '../../providers/geofire/geofire';
 //import { Vibration } from '@ionic-native/vibration';
 //import { RatePage } from '../../pages/rate/rate';
 import { Diagnostic } from '@ionic-native/diagnostic';
@@ -54,7 +54,6 @@ export class HomePage implements AfterViewInit  {
   uid: any
   driverLocationName: any;
   startedNavigation: boolean = false;
-  destinationSetName: any;
   added: boolean = true;
   price: any;
 
@@ -62,24 +61,20 @@ export class HomePage implements AfterViewInit  {
   destinationLatLng: any;
   geocoder: any = new google.maps.Geocoder;
 
-
-  enablePickupLocation: boolean = false;
   onDriverRequest: boolean = false;
 
   currentLocationControl: any = {
     id: 1,
-    label: 'Set pickup Location',
+    label: 'Your location',
     icon: 'md-locate'
   }
   destinationLocationControl: any = {
     id: 2,
-    label: 'Set Destination',
+    label: 'Choose Destination',
     icon: 'md-pin'
   }
-  locactionControls: any = []
 
-
-  constructor(public storage: Storage, public stB: StatusBar, public geolocation: Geolocation, public loadingCtrl: LoadingController, public diagnostic: Diagnostic, public alert: AlertController,  public cMap: NativeMapContainerProvider, public myGcode: GeocoderProvider, public dProvider: DirectionProvider, public platform: Platform, public modalCtrl: ModalController, public menu: MenuController, public pop: PopUpProvider, public anim: AnimControlProvider, public ph: ProfileProvider, public myMap: MapContainerProvider,  public navCtrl: NavController, public eventProvider: EventProvider, public OneSignal: NotificationProvider) {
+  constructor(public storage: Storage, public stB: StatusBar, public geolocation: Geolocation, public loadingCtrl: LoadingController, public diagnostic: Diagnostic, public alert: AlertController,  public cMap: NativeMapContainerProvider, public myGcode: GeocoderProvider, public dProvider: DirectionProvider, public platform: Platform, public modalCtrl: ModalController, public menu: MenuController, public pop: PopUpProvider, public anim: AnimControlProvider, public ph: ProfileProvider, public myMap: MapContainerProvider,  public navCtrl: NavController, public eventProvider: EventProvider, public OneSignal: NotificationProvider, public geoFire: GeofireProvider) {
   menu.swipeEnable(false, 'menu1');
   this.address = {
     place: 'Dallas, TX USA'
@@ -90,14 +85,10 @@ export class HomePage implements AfterViewInit  {
   ngAfterViewInit() {
     this.platform.ready().then(() => {
       this.cMap.loadMap();
-      this.WaitForGeolocation();
     });
 }
 
   ionViewDidLoad(){
-
-    this.locactionControls.push(this.destinationLocationControl)
-   
     const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
       if (!user) {
         this.navCtrl.setRoot('LoginEntrancePage');
@@ -116,18 +107,6 @@ export class HomePage implements AfterViewInit  {
     }
     });
     
-  }
-
-
-
-  WaitForGeolocation(){
-    let location_tracker_loop = setTimeout(()=>{
-      if (this.cMap.hasShown){
-        clearTimeout(location_tracker_loop)
-      }else{
-       this.WaitForGeolocation()
-      }
-      }, 1000)
   }
 
   
@@ -154,8 +133,11 @@ export class HomePage implements AfterViewInit  {
       this.address.place = data;
     if (selectedBar == 1 && data != null){
       if (!this.startedNavigation){
-        this.updateLocation(selectedBar, data)
-
+        this.currentLocationControl = {
+          id: 1,
+          label: data,
+          icon: 'md-locate'
+        }
         this.geocoder.geocode( { 'address': data}, (results, status) => {
           if (status == 'OK') {
             this.locationLatLng = results[0].geometry.location;
@@ -166,8 +148,11 @@ export class HomePage implements AfterViewInit  {
       }
     }
     if (selectedBar == 2 && data != null){
-      this.updateLocation(selectedBar, data)
-      this.destinationSetName = data
+      this.destinationLocationControl = {
+        id: 2,
+        label: data,
+        icon: 'md-pin'
+      }
 
       this.geocoder.geocode( { 'address': data}, (results, status) => {
         if (status == 'OK') {
@@ -182,15 +167,6 @@ export class HomePage implements AfterViewInit  {
     });
     modal.present();
   }
-
-
-
-
-  estimate(){
-    this.cMap.onDestinatiobarHide = true;
-    this.dProvider.calculateBtn = true;
-  }
-
 
 
   CheckForPreviousData(){
@@ -210,44 +186,54 @@ export class HomePage implements AfterViewInit  {
     
   }
 
+  getLocationUID() {
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    for (var i = 0; i < 5; i++)
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+    return text;
+  }
+
   
-  pickLocation(){
-    this.enablePickupLocation = !this.enablePickupLocation;
-    if(this.enablePickupLocation){
-      this.locactionControls = []
-      this.locactionControls.push(this.currentLocationControl);
-      this.locactionControls.push(this.destinationLocationControl);
-    }else{
-      // var index = this.locactionControls.indexOf(this.currentLocationControl);
-      this.locactionControls.splice(this.locactionControls.indexOf(this.currentLocationControl), 1);
-      // this.locactionControls.splice(index, 1);
-    }
-  }
-
-  updateLocation(selector, data){
-    if (selector) {
-      this.locactionControls.splice(this.locactionControls.indexOf(this.currentLocationControl), 1);
-      this.locactionControls.push({
-        id: 1,
-        label: data,
-        icon: 'md-locate'
-      });
-    } else {
-      this.locactionControls.splice(this.locactionControls.indexOf(this.currentLocationControl), 1);
-      this.locactionControls.push({
-        id: 2,
-        label: data,
-        icon: 'md-pin'
-      });
-    }
-  }
-
   findDrivers(){
-    this.cMap.onbar2 = true
-    this.onDriverRequest = !this.onDriverRequest;
-    setTimeout(()=>{
-     this.navCtrl.push('LookupPage', { currentLocation: this.address.place });
-     }, 1000)
+    // this.onDriverRequest = !this.onDriverRequest;
+
+    let startLatLng = this.locationLatLng
+    let destLatLng = this.destinationLatLng
+    let locationLb = this.getLocationUID() + '-C-' + Date.now().toString().replace(' ', '');
+
+     if (startLatLng === undefined){
+         if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition((position)=>{
+
+            var crd = position.coords;
+            startLatLng = {
+              lat:crd.latitude,
+              lng: crd.longitude
+            }
+            
+            this.geoFire.setLocation(locationLb, [crd.latitude, crd.longitude])
+  
+            let data = {
+              current : startLatLng,
+              destination: destLatLng
+            }
+  
+            this.navCtrl.push('LookupPage', { locations: data });
+  
+          }, ()=>{ console.warn(`ERROR: geolocation`);});
+
+         }
+
+      }else{
+        let data = {
+          current : startLatLng,
+          destination: destLatLng
+        }
+        this.geoFire.setLocation(locationLb, [startLatLng.lat(), startLatLng.lng()])
+        //console.log('XY: ' + JSON.stringify(data));
+        this.navCtrl.push('LookupPage', { locations: data });
+      }
   }
 
 
@@ -319,43 +305,41 @@ export class HomePage implements AfterViewInit  {
 
   createUserInformation(name: string, picture: any, 
     lat: number, lng: number, locationName: any, payWith: any) {
-      this.NotifyTimes++
-      let driver_id = this.cMap.car_notificationIds[this.NotifyTimes];
-      if (driver_id != null){
-      let selected_driver = driver_id.toString();
-      console.log(selected_driver);
-      this.pop.uid = selected_driver;
-      this.dProvider.id = selected_driver;
-      this.uid = selected_driver;
-      let dest = 'Waiting For Input..';
-      if (this.destinationSetName != null){
-        dest = this.destinationSetName
+          this.NotifyTimes++
+          let driver_id = this.cMap.car_notificationIds[this.NotifyTimes];
+          if (driver_id != null){
+          let selected_driver = driver_id.toString();
+          console.log(selected_driver);
+          this.pop.uid = selected_driver;
+          this.dProvider.id = selected_driver;
+          this.uid = selected_driver;
+          let dest = 'Waiting For Input..';
+
+
+        let CustomerRef = firebase.database().ref(`Customer/${selected_driver}`);
+        return CustomerRef.child("/client").set({
+          Client_username: name,
+          Client_location: [lat, lng],
+          Client_locationName: locationName,
+          Client_paymentForm: payWith,
+          Client_picture: picture,
+          Client_destinationName: dest,
+          Client_CanChargeCard: false,
+          Client_PickedUp: false,
+          Client_Dropped: false,
+          Client_HasRated: false
+      
+        }).then(suc=>{
+
+            this.CreatePushNotification();
+        })
+      }else{
+        clearTimeout(this.timeTonotify);
+        this.pop.clearAll(this.uid, true);
+        console.log(this.NotifyTimes);
+        this.pop.show('All Our Drivers Are Busy, Please Try Again. Sorry For The Incovenience.')
+        this.NotifyTimes = -1;
       }
-
-    let CustomerRef = firebase.database().ref(`Customer/${selected_driver}`);
-    return CustomerRef.child("/client").set({
-      Client_username: name,
-      Client_location: [lat, lng],
-      Client_locationName: locationName,
-      Client_paymentForm: payWith,
-      Client_picture: picture,
-      Client_destinationName: dest,
-      Client_CanChargeCard: false,
-      Client_PickedUp: false,
-      Client_Dropped: false,
-      Client_HasRated: false
-   
-    }).then(suc=>{
-
-        this.CreatePushNotification();
-    })
-  }else{
-    clearTimeout(this.timeTonotify);
-    this.pop.clearAll(this.uid, true);
-    console.log(this.NotifyTimes);
-    this.pop.show('All Our Drivers Are Busy, Please Try Again. Sorry For The Incovenience.')
-    this.NotifyTimes = -1;
-  }
     
   }
 
@@ -420,64 +404,34 @@ export class HomePage implements AfterViewInit  {
     clearTimeout(this.cMap.timer1)
     CustomerRef.on('child_added', customerSnapshot => {
  
-    if (this.returningUser){
-     if (customerSnapshot.val().Driver_location){
-      this.presentRouteLoader('Waiting...');
-      //this.vibration.vibrate(1000);
-      this.DriverFound(customerSnapshot.val().Driver_location,
-      customerSnapshot.val().Driver_plate, 
-      customerSnapshot.val().Driver_carType,
-      customerSnapshot.val().Driver_name, 
-      customerSnapshot.val().Driver_seat,
-      customerSnapshot.val().Driver_locationName, 
-      customerSnapshot.val().Driver_rating, 
-      customerSnapshot.val().Driver_picture, 
-      customerSnapshot.val().Driver_number,
-      customerSnapshot.val().Client_locationName,
-      customerSnapshot.val().Client_location[0],
-      customerSnapshot.val().Client_location[1]
+        if (this.returningUser){
+            if (customerSnapshot.val().Driver_location){
+              this.presentRouteLoader('Waiting...');
+              //this.vibration.vibrate(1000);
+              this.DriverFound(customerSnapshot.val().Driver_location,
+              customerSnapshot.val().Driver_plate, 
+              customerSnapshot.val().Driver_carType,
+              customerSnapshot.val().Driver_name, 
+              customerSnapshot.val().Driver_seat,
+              customerSnapshot.val().Driver_locationName, 
+              customerSnapshot.val().Driver_rating, 
+              customerSnapshot.val().Driver_picture, 
+              customerSnapshot.val().Driver_number,
+              customerSnapshot.val().Client_locationName,
+              customerSnapshot.val().Client_location[0],
+              customerSnapshot.val().Client_location[1]);
 
-      
-     );
+            this.cMap.onDestinatiobarHide = true;
+            
+            }
 
-     this.cMap.onDestinatiobarHide = true;
-
-    //  if (customerSnapshot.val().Client_PickedUp && picked_up){
-    //   picked_up = false
-    //   document.getElementById("header").innerHTML = "Your Journey Has Started.";
-    //   document.getElementById("header").style.textAlign = 'center';
-    //   document.getElementById("header").style.fontSize = "1.34em";
-
-    //  } else if (customerSnapshot.val().Client_Dropped && dropped){
-    //   dropped = false
-    //   document.getElementById("header").innerHTML = "Your Journey Has Started.";
-    //   document.getElementById("header").style.textAlign = 'center';
-    //   document.getElementById("header").style.fontSize = "1.34em";
-
-    //  } else if (!customerSnapshot.val().Client_HasRated && rated){
-    //   if (this.ph.paymentType != 1){
-    //     console.log(this.ph.card, this.ph.month, this.ph.cvc, this.ph.year, customerSnapshot.val().Client_price, this.ph.email)
-    //    this.price = customerSnapshot.val().Client_price
-    //    this.showPayAlert(this.price)
-    //    } else{
-    //     this.showPayCash('Pay NGN ' + customerSnapshot.val().Client_price + ' To This Driver.')
-    //    }
-    //    rated = false
-    //   }
-
-     
-    }
-
-    let driverPos = new google.maps.LatLng(customerSnapshot.val().Driver_location[0], customerSnapshot.val().Driver_location[1])
-    let userPos = new google.maps.LatLng(customerSnapshot.val().Client_location[0], customerSnapshot.val().Client_location[1])
-    this.dProvider.calcRoute(userPos, driverPos, true, false, 'ghjtfd')
-}
+          let driverPos = new google.maps.LatLng(customerSnapshot.val().Driver_location[0], customerSnapshot.val().Driver_location[1])
+          let userPos = new google.maps.LatLng(customerSnapshot.val().Client_location[0], customerSnapshot.val().Client_location[1])
+          this.dProvider.calcRoute(userPos, driverPos, true, false, 'ghjtfd')
+      }
     });
 
 
-
-    
-    
     CustomerRef.on('child_changed', customerSnapshot => {
       
     if (customerSnapshot.val().Client_PickedUp && picked_up){
@@ -611,8 +565,7 @@ export class HomePage implements AfterViewInit  {
 
 
 
-   hideFunctionsOnDriverFound()
-   {
+   hideFunctionsOnDriverFound(){
     this.cMap.onbar2 = false
     this.cMap.onbar3 = true
   

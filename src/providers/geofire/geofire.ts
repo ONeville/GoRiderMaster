@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
 import * as firebase from 'firebase/app';
-import { Storage } from '@ionic/storage';
 import * as GeoFire from "geofire";
 import { BehaviorSubject } from 'rxjs/BehaviorSubject'
 /*
@@ -14,20 +13,19 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject'
 export class GeofireProvider {
   dbRef: any;
   geoFire: any;
-  hits = new BehaviorSubject([])
+  public hits = new BehaviorSubject([])
   
   constructor() {
-    let db =  firebase.database();
-
-    // this.dbRef = new firebase.database().ref();
-    // this.geoFire = new GeoFire(this.dbRef.$ref);
+    let dbRefDb = firebase.database().ref();
+    this.geoFire = new GeoFire(dbRefDb);
   }
 
      /// Adds GeoFire data to database
-     setLocation(key:string, coords: Array<number>) {
-      this.geoFire.set(key, coords)
-          .then(_ => console.log('location updated'))
-          .catch(err => console.log(err))
+    setLocation(key:string, coords: Array<number>) {
+
+          this.geoFire.set(key, coords)
+              .then(_ => console.log('location updated'))
+              .catch(err => console.log(err))
     }
  
  
