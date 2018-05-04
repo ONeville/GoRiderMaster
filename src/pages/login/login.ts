@@ -46,15 +46,16 @@ export class LoginPage {
 
   checkerLogin() { 
     // console.log('Test Loger');
-    this.authProvider.createUser('terttt@mail.com', '000125ss')
-    .then( authData => {
-      console.log(authData);
-    }, error => { console.log(error); });
+    // this.authProvider.createUser('terttt@mail.com', '000125ss')
+    // .then( authData => {
+    //   console.log(authData);
+    // }, error => { console.log(error); });
 
   }
   queryLogin() { 
     // console.log('Test Loger');
-    this.authProvider.queryUser();
+    // this.authProvider.queryUser();
+    this.navCtrl.setRoot('SignupPage')
 
   }
   
@@ -93,7 +94,7 @@ export class LoginPage {
   }
 
   goToSignup(): void {
-    this.navCtrl.push('LoginEntrancePage');
+    // this.navCtrl.push('LoginEntrancePage');
   }
 
   goToResetPassword(): void {

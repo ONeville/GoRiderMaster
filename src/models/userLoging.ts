@@ -1,28 +1,31 @@
 
 export class UserLoginModel {
-    public UserId: string;
+    public Id: string = '';
     public Email: string;
-    public Password: string
+    public IsPassenger: boolean
 
     constructor(){
  
     }
- 
-    setId(id){
-        this.UserId = id;
+    setUser(id, email, isPassenger){
+        this.Id = id;
+        this.Email = email;
+        this.IsPassenger = isPassenger;
+    }
+    setPassengerUser(email){
+        this.Email = email;
+        this.IsPassenger = true;
     }
 
-    setUser(email, password){
-        this.UserId = 'o';
+    setDriverUser(email){
         this.Email = email;
-        this.Password = password;
+        this.IsPassenger = false;
     }
 
     getUser(){
         return {
-            UserId: this.UserId,
             email: this.Email,
-            password: this.Password
+            isPassenger: this.IsPassenger
         }
     }
 }

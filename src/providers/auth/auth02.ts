@@ -3,27 +3,39 @@ import  firebase from 'firebase';
 import { Platform } from 'ionic-angular';
 
 import { UserLoginModel } from '../../models/userLoging';
-// import { UserModel } from '../../models/model';
 
 @Injectable()
-export class AuthProvider {
-  public fireAuth:firebase.auth.Auth;
-  public userProfileRef:firebase.database.Reference;
-  public userRef:firebase.database.Reference;
-  public passengerRef:firebase.database.Reference;
+export class Auth02Provider {
+  private fireAuth:firebase.auth.Auth;
+  private userRef:firebase.database.Reference;
+  private passengerRef:firebase.database.Reference;
+  private driverRef:firebase.database.Reference;
   private currentUser: firebase.User;
-
-  public dbRef:firebase.database.Reference;
 
   
   constructor(public platform: Platform) {
-    
-    this.userProfileRef = firebase.database().ref('/userProfile');
-    
      this.userRef = firebase.database().ref('/userModel');
      this.passengerRef = firebase.database().ref('/passengerModel');
+     this.driverRef = firebase.database().ref('/driverModel');
      firebase.auth().onAuthStateChanged((user: firebase.User) => this.currentUser = user);
   }
+
+  AddPassengerLogin(email, password) {
+    var user = new UserLoginModel()
+    user.setPassengerUser(email);
+    return  firebase.auth().createUserWithEmailAndPassword(email, password).then( newUser => {
+      this.userRef.child(newUser.uid).set(user.getUser());
+    });
+  }
+
+  AddDriverLogin(email, password) {
+    var user = new UserLoginModel()
+    user.setDriverUser(email);
+    return  firebase.auth().createUserWithEmailAndPassword(email, password).then( newUser => {
+      this.userRef.child(newUser.uid).set(user.getUser());
+    });
+  }
+
 
   queryUser() {
     var user;
@@ -38,20 +50,12 @@ export class AuthProvider {
     return  firebase.auth().signInWithEmailAndPassword(email, password);
   }
 
-  signupUser(email: string, password: string): Promise<any> {
-    return  firebase.auth().createUserWithEmailAndPassword(email, password).then( newUser => {
-      this.userProfileRef.child(newUser.uid).set({
-        email: email
-      });
-    });
-  }
-
   resetPassword(email: string): Promise<void> {
     return  firebase.auth().sendPasswordResetEmail(email);
   }
 
   logoutUser(): Promise<void> {
-    this.userProfileRef.child( firebase.auth().currentUser.uid).off();
+    this.userRef.child( firebase.auth().currentUser.uid).off();
     return  firebase.auth().signOut();
   }
 

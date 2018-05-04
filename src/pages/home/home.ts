@@ -98,7 +98,7 @@ export class HomePage implements AfterViewInit  {
         unsubscribe(); 
         this.userProfile = firebase.database().ref(`userProfile/${user.uid}`);
         this.ph.getUserProfile().on('value', userProfileSnapshot => {
-        let phone = userProfileSnapshot.val().phoneNumber
+        let phone = '000000000'; // userProfileSnapshot.val().phoneNumber
 
         if (phone == null || phone == undefined)
           this.navCtrl.setRoot('PhonePage');

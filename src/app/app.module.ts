@@ -33,6 +33,9 @@ import { NotificationProvider } from '../providers/notification/notification';
 import { AnimControlProvider } from '../providers/anim-control/anim-control';
 import { PopUpProvider } from '../providers/popup/popup';
 
+import { Auth02Provider } from '../providers/auth/auth02';
+import { Profile02Provider } from '../providers/profile/profile02';
+
 export const firebaseConfig = {
   apiKey: "AIzaSyCvWzAK0ghG6mynLWyfaznda2VvOsQvTeM",
   authDomain: "mepabi-5e27b.firebaseapp.com",
@@ -81,7 +84,9 @@ firebase.initializeApp(firebaseConfig);
     OneSignal,
     Diagnostic,
     GoogleMaps,
-    GeofireProvider
+    GeofireProvider,
+    Auth02Provider,
+    Profile02Provider
   ]
 })
 export class AppModule {}
