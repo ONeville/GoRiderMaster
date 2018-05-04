@@ -1,6 +1,6 @@
 <ion-content padding class="no-scroll">
   <div text-center>
-    <h1 class='logo-text'> TaxiFin</h1>
+    <h1 class='logo-text'> C O R I A</h1>
     <p class='logo-text'>
       <small>
         <i>I like it!</i>
@@ -8,7 +8,14 @@
     </p>
   </div>
 
-  <form *ngIf="initState" [formGroup]="loginForm" (submit)="loginUser()" novalidate>
+  <button color='light' ion-button block clear (click)="checkerLogin()">
+    Checker
+  </button>
+  <button color='light' ion-button block clear (click)="queryLogin()">
+    Query
+  </button>
+
+  <form *ngIf="initState" [formGroup]="loginForm" (submit)="testloginUser()" novalidate>
 
     <ion-label color='primary' stacked>Email</ion-label>
     <ion-input formControlName="email" type="email" placeholder="username@domain.com" [class.invalid]="!loginForm.controls.email.valid && loginForm.controls.email.dirty">

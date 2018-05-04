@@ -9,6 +9,10 @@ import { AuthProvider } from '../../providers/auth/auth';
 import { EmailValidator } from '../../validators/email';
 import { IonicPage } from 'ionic-angular';
 import { ProfileProvider } from '../../providers/profile/profile';
+
+
+import { UserLoginModel } from '../../models/userLoging';
+
 @IonicPage()
 @Component({
   selector: 'page-signup',
@@ -17,6 +21,7 @@ import { ProfileProvider } from '../../providers/profile/profile';
 export class SignupPage {
   public signupForm: FormGroup;
   loading: Loading;
+  
   constructor(public navCtrl: NavController, public authProvider: AuthProvider, 
     public formBuilder: FormBuilder, public loadingCtrl: LoadingController,public ph: ProfileProvider, 
     public alertCtrl: AlertController) {

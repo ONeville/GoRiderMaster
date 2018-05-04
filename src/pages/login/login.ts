@@ -12,6 +12,9 @@ import { IonicPage } from 'ionic-angular';
 import { ProfileProvider } from '../../providers/profile/profile';
 import { NativeMapContainerProvider } from '../../providers/map-native-container/map-native-container';
 import { Diagnostic } from '@ionic-native/diagnostic';
+
+// import { UserLoginModel } from '../../models/userLoging';
+
 @IonicPage()
 @Component({
   selector: 'page-login',
@@ -41,11 +44,24 @@ export class LoginPage {
    this.ntP.checkGps();
   }
 
+  checkerLogin() { 
+    // console.log('Test Loger');
+    this.authProvider.createUser('terttt@mail.com', '000125ss')
+    .then( authData => {
+      console.log(authData);
+    }, error => { console.log(error); });
+
+  }
+  queryLogin() { 
+    // console.log('Test Loger');
+    this.authProvider.queryUser();
+
+  }
   
   loginUser() {
     if (!this.loginForm.valid){
       console.log(this.loginForm.value);
-    } else {
+    } else {      
       this.authProvider.loginUser(this.loginForm.value.email, this.loginForm.value.password)
       .then( authData => {
         this.loading.dismiss().then( () => {
