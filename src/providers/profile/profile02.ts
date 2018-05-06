@@ -12,22 +12,23 @@ export class Profile02Provider {
   private passengerModel: PassengerProfileModel;
   private driverModel: DriverProfileModel;
 
-
   constructor() {
+    this.initAuth();
+  }
+
+  initAuth(){
     firebase.auth().onAuthStateChanged( user => {
       if (user) {
-        // this.currentUser = user;
         this.initUser(user.uid);
 
+        // console.log('Checker: ' + this.userModel.IsPassenger);
 
-        if (this.userModel.IsPassenger) {
-          this.initPassenger(user.uid);
-        }
-        if (!this.userModel.IsPassenger) {
-          this.initDriver(user.uid);
-        }
-
-
+        // if (this.userModel.IsPassenger) {
+        //   this.initPassenger(user.uid);
+        // }
+        // if (!this.userModel.IsPassenger) {
+        //   this.initDriver(user.uid);
+        // }
       }
     });
   }
@@ -36,7 +37,13 @@ export class Profile02Provider {
     var userLogged = firebase.database().ref(`userModel/${id}`);
     userLogged.on('value', snap => {
      this.userModel = new UserLoginModel()
-     this.userModel.setUser(id, snap.val().email, snap.val().isPassenger);
+     this.userModel.setUser(id, snap.val().email, snap.val().isPassenger, snap.val().displayName);
+      if (snap.val().isPassenger) {
+        this.initPassenger(id);        
+      } else {
+        this.initDriver(id);        
+      }
+
     })
   }
 
@@ -44,11 +51,13 @@ export class Profile02Provider {
     var userLogged = firebase.database().ref(`passengerModel/${id}`);
     userLogged.on('value', snap => {
      this.passengerModel = new PassengerProfileModel()
-     this.passengerModel.setProfile(snap.val().firstName
-     , snap.val().lastName
-     , snap.val().phone
-     , snap.val().profileId
-     , id);
+      if (snap.val()) {
+        this.passengerModel.setProfile(snap.val().firstName
+        , snap.val().lastName
+        , snap.val().phone
+        , snap.val().profileId
+        , id);
+      }
     })
   }
 
@@ -56,11 +65,13 @@ export class Profile02Provider {
     var userLogged = firebase.database().ref(`driverModel/${id}`);
     userLogged.on('value', snap => {
       this.driverModel = new DriverProfileModel()
-      this.driverModel.setProfile(snap.val().firstName
-      , snap.val().lastName
-      , snap.val().phone
-      , snap.val().profileId
-      , id);
+      if (snap.val()) {        
+        this.driverModel.setProfile(snap.val().firstName
+        , snap.val().lastName
+        , snap.val().phone
+        , snap.val().profileId
+        , id);
+      }
     })
   }
 
@@ -76,6 +87,16 @@ export class Profile02Provider {
     return driverModel.child(this.userModel.Id).set(driver.getProfile());
   }
 
+  refleshProfile(id){
+    this.initUser(id);
+    if (this.userModel.IsPassenger) {
+      this.initPassenger(this.userModel.Id);
+    }
+    if (!this.userModel.IsPassenger) {
+      this.initDriver(this.userModel.Id);
+    }
+  }
+
   getUserProfile() {
     return this.userModel;
   }
@@ -88,6 +109,11 @@ export class Profile02Provider {
     return this.driverModel;
   }
 
+  updateDisplayProfile(id: any, value: string) {
+    return firebase.database().ref(`userModel/${id}`).update({
+      displayName: value
+    });
+  }
 
   RateDriver(id: any, value: boolean): Promise<any> {
     return firebase.database().ref(`Customer/${id}/client`).update({

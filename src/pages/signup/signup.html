@@ -22,16 +22,22 @@
       [class.invalid]="!signupForm.controls.password.valid && signupForm.controls.password.dirty">
     </ion-input>
 <!-- [(ngModel)]="catchSexSelection" [ngModelOptions]="{standalone: true}" -->
-    <ion-list radio-group formControlName="isPassenger">
-      <ion-item>
+    <ion-list radio-group formControlName="isPassenger" [(ngModel)]="value">
+      <!-- <ion-item>
         <ion-label>Are you passenger ?</ion-label>
         <ion-radio></ion-radio>
       </ion-item>
   
       <ion-item>
         <ion-label>Are you driver ?</ion-label>
-        <ion-radio></ion-radio>
+        <ion-radio [value]=""></ion-radio>
+      </ion-item> -->
+
+      <ion-item *ngFor="let option of userTypes" >
+          <ion-label>{{option.label}}</ion-label>
+          <ion-radio  value="{{option.value}}"></ion-radio>
       </ion-item>
+
     </ion-list>
 
   <button padding ion-button block type="submit" [disabled]="!signupForm.valid">

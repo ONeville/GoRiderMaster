@@ -5,7 +5,7 @@ import {
   LoadingController,
   AlertController, MenuController  } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthProvider } from '../../providers/auth/auth';
+// import { AuthProvider } from '../../providers/auth/auth';
 import { IonicPage } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 
@@ -35,7 +35,7 @@ export class UserProfilePage {
   public currentUser: UserLoginModel;
 
 
-  constructor(public navCtrl: NavController, public stB: StatusBar, public menu: MenuController, public authProvider: AuthProvider, 
+  constructor(public navCtrl: NavController, public stB: StatusBar, public menu: MenuController,  
     public formBuilder: FormBuilder, public loadingCtrl: LoadingController, 
     public alertCtrl: AlertController, private profile:Profile02Provider) {
       menu.swipeEnable(false, 'menu1');
@@ -55,9 +55,7 @@ export class UserProfilePage {
   }
 
   save(){
-    if (!this.profileForm.valid){
-      console.log(this.profileForm.value);
-    } else {
+    if (this.profileForm.valid){
       let loading = this.loadingCtrl.create({
         content: 'Finalizing..'
       });
@@ -74,6 +72,7 @@ export class UserProfilePage {
 
         this.profile.AddPassengerDetails(passengerModel).then(success =>{
             loading.dismiss().then(suc =>{
+            this.profile.updateDisplayProfile(this.currentUser.Id, this.profileForm.value.firstName)
             this.stB.show();
             this.navCtrl.setRoot('ClientIndexPage')
           })
@@ -90,11 +89,14 @@ export class UserProfilePage {
 
         this.profile.AddDriverDetails(driverModel).then(success =>{
             loading.dismiss().then(suc =>{
+              this.profile.updateDisplayProfile(this.currentUser.Id, this.profileForm.value.firstName)
             this.stB.show();
             this.navCtrl.setRoot('DriverIndexPage')
           })
           });
       }
+
+      this.profile.refleshProfile(this.currentUser.Id);
     }
   }
 

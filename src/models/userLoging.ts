@@ -2,15 +2,17 @@
 export class UserLoginModel {
     public Id: string = '';
     public Email: string;
-    public IsPassenger: boolean
+    public IsPassenger: boolean = false
+    public DisplayName: string = '';
 
     constructor(){
  
     }
-    setUser(id, email, isPassenger){
+    setUser(id, email, isPassenger, name){
         this.Id = id;
         this.Email = email;
         this.IsPassenger = isPassenger;
+        this.DisplayName = name;
     }
     setPassengerUser(email){
         this.Email = email;
@@ -25,7 +27,9 @@ export class UserLoginModel {
     getUser(){
         return {
             email: this.Email,
-            isPassenger: this.IsPassenger
+            isPassenger: this.IsPassenger,
+            displayName: this.DisplayName
         }
     }
+
 }

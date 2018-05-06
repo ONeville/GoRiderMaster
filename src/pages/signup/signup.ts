@@ -5,13 +5,8 @@ import {
   LoadingController,
   AlertController } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthProvider } from '../../providers/auth/auth';
 import { EmailValidator } from '../../validators/email';
 import { IonicPage } from 'ionic-angular';
-
-// import { ProfileProvider } from '../../providers/profile/profile';
-
-
 import { Auth02Provider } from '../../providers/auth/auth02';
 import { Profile02Provider } from '../../providers/profile/profile02';
 
@@ -24,15 +19,24 @@ import { Profile02Provider } from '../../providers/profile/profile02';
 export class SignupPage {
   public signupForm: FormGroup;
   loading: Loading;
+
   
-  constructor(public navCtrl: NavController, public authProvider: AuthProvider, 
-    public formBuilder: FormBuilder, public loadingCtrl: LoadingController,public userProfile: Profile02Provider, 
-    public alertCtrl: AlertController, private authV2: Auth02Provider) {
+  userTypes: any = [
+    { label: 'Are you passenger ?', value: true },
+    { label: 'Are you driver ?', value: false }
+  ]
+
+  constructor(public navCtrl: NavController,  
+    public formBuilder: FormBuilder, 
+    public loadingCtrl: LoadingController, 
+    public userProfile: Profile02Provider, 
+    public alertCtrl: AlertController, 
+    private authV2: Auth02Provider) {
 
       this.signupForm = formBuilder.group({
-        email: ['', Validators.compose([Validators.required, EmailValidator.isValid])],
-        password: ['', Validators.compose([Validators.minLength(6), Validators.required])],
-        isPassenger: true
+        email: ['pass00@mail.com', Validators.compose([Validators.required, EmailValidator.isValid])],
+        password: ['passs123', Validators.compose([Validators.minLength(6), Validators.required])],
+        isPassenger: [true, Validators.compose([Validators.required])],
       });
     }
 
@@ -67,15 +71,14 @@ export class SignupPage {
     // }
   }
 
-
   createUser(){
-    if (!this.signupForm.valid){
-      console.log(this.signupForm.value);
-    } else {
-        if (this.signupForm.value.isPassenger.indexOf("5") > 0) {
+    if (this.signupForm.valid){
+        if (this.signupForm.value.isPassenger) {
           this.authV2.AddPassengerLogin(this.signupForm.value.email, this.signupForm.value.password)
           .then(() => {
-            this.loading.dismiss().then( () => { this.navCtrl.push('UserProfilePage'); });
+            this.loading.dismiss().then( () => { 
+              this.navCtrl.push('UserProfilePage'); 
+            });
           }, (error) => { 
             this.loading.dismiss().then( () => {
               let alert = this.alertCtrl.create({
@@ -92,10 +95,11 @@ export class SignupPage {
           });
         }
 
-        if (this.signupForm.value.isPassenger.indexOf("6") > 0) {
+        if (!this.signupForm.value.isPassenger) {
           this.authV2.AddDriverLogin(this.signupForm.value.email, this.signupForm.value.password)
           .then(() => {
-              this.loading.dismiss().then( () => { this.navCtrl.push('UserProfilePage'); });
+              this.loading.dismiss().then( () => { 
+                this.navCtrl.push('UserProfilePage'); });
           }, (error) => { 
             this.loading.dismiss().then( () => {
               let alert = this.alertCtrl.create({

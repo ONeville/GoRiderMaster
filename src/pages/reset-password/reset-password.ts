@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, AlertController } from 'ionic-angular';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { AuthProvider } from '../../providers/auth/auth';
+import { Auth02Provider } from '../../providers/auth/auth02';
 import { EmailValidator } from '../../validators/email';
 import { IonicPage } from 'ionic-angular';
 @IonicPage()
@@ -12,7 +12,7 @@ import { IonicPage } from 'ionic-angular';
 export class ResetPasswordPage {
   public resetPasswordForm: FormGroup;
   
-  constructor(public navCtrl: NavController, public authProvider: AuthProvider, 
+  constructor(public navCtrl: NavController, public authProvider: Auth02Provider, 
     public formBuilder: FormBuilder, public alertCtrl: AlertController) {
       
       this.resetPasswordForm = formBuilder.group({

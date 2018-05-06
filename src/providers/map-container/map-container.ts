@@ -2,7 +2,7 @@ import { Injectable, ViewChild, ElementRef } from '@angular/core';
 import { Platform, Nav } from 'ionic-angular';
 import { GeocoderProvider } from '../../providers/geocoder/geocoder';
 import { AnimControlProvider } from '../../providers/anim-control/anim-control';
-import { ProfileProvider } from '../../providers/profile/profile';
+import { Profile02Provider } from '../../providers/profile/profile02';
 declare var google;
 
 /*
@@ -40,7 +40,7 @@ export class MapContainerProvider {
  public onGpsEnabled: boolean = false;
  
 
-  constructor( public myProf: ProfileProvider, public anim: AnimControlProvider, public gcode: GeocoderProvider, public platform: Platform,) {
+  constructor( public myProf: Profile02Provider, public anim: AnimControlProvider, public gcode: GeocoderProvider, public platform: Platform,) {
   }
 
 
@@ -218,46 +218,47 @@ export class MapContainerProvider {
     scaledSize: new google.maps.Size(35, 35), // scaled size
  
 };
-  this.myProf.getAllDrivers().on('child_added', driverSnapshot => {
- 
-  this.isCarAvailable = true;
-  this.locations = [driverSnapshot.val().driver_details[0], driverSnapshot.val().driver_details[1]];
-  id = [driverSnapshot.val().driver_details[2]];
 
-  let marker, i;
-  console.log(this.locations.length)
-  this.showCloseDrivers(this.lat, this.lng)
-  
-    if (this.locations.length <= 4){
-        allCars = new google.maps.Marker({
-          position: new google.maps.LatLng(this.locations[0], this.locations[1]),
-          map: this.map,
-          icon: car
-        });
-       
-        allCars.setMap(this.map);
-        this.cars.push(allCars);
-        console.log(this.cars)
-      }
-      // }while(this.locations.length <= 4)
-
-       
-         
-        this.locations.push([driverSnapshot.val().driver_details[0], driverSnapshot.val().driver_details[1]])
-        
-
-      console.log(this.locations[1])
-      
-      this.car_notificationIds.push(id)
+  // this.myProf.getAllDrivers().on('child_added', driverSnapshot => {
     
-      this.myProf.getAllDrivers().off('child_added');
+  //     this.isCarAvailable = true;
+  //     this.locations = [driverSnapshot.val().driver_details[0], driverSnapshot.val().driver_details[1]];
+  //     id = [driverSnapshot.val().driver_details[2]];
+
+  //     let marker, i;
+  //     console.log(this.locations.length)
+  //     this.showCloseDrivers(this.lat, this.lng)
       
-    //  this.locations.push([driverSnapshot.val().driver_details[0], driverSnapshot.val().driver_details[1]]);
-     // this.car_location.push(this.location);
-      console.log(this.car_location)
-     
-      //console.log(driverSnapshot.val().driver_details[2], this.location.length, driverSnapshot.val().driver_details[0], driverSnapshot.val().driver_details[1])
-    })
+  //       if (this.locations.length <= 4){
+  //           allCars = new google.maps.Marker({
+  //             position: new google.maps.LatLng(this.locations[0], this.locations[1]),
+  //             map: this.map,
+  //             icon: car
+  //           });
+          
+  //           allCars.setMap(this.map);
+  //           this.cars.push(allCars);
+  //           console.log(this.cars)
+  //         }
+  //         // }while(this.locations.length <= 4)
+
+          
+            
+  //           this.locations.push([driverSnapshot.val().driver_details[0], driverSnapshot.val().driver_details[1]])
+            
+
+  //         console.log(this.locations[1])
+          
+  //         this.car_notificationIds.push(id)
+        
+  //         //this.myProf.getAllDrivers().off('child_added');
+          
+  //       //  this.locations.push([driverSnapshot.val().driver_details[0], driverSnapshot.val().driver_details[1]]);
+  //       // this.car_location.push(this.location);
+  //         console.log(this.car_location)
+        
+  //         //console.log(driverSnapshot.val().driver_details[2], this.location.length, driverSnapshot.val().driver_details[0], driverSnapshot.val().driver_details[1])
+  //   })
   })
  }
 

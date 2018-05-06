@@ -8,14 +8,7 @@
     </p>
   </div>
 
-  <button color='light' ion-button block clear (click)="checkerLogin()">
-    Checker
-  </button>
-  <button color='light' ion-button block clear (click)="queryLogin()">
-    Query
-  </button>
-
-  <form *ngIf="initState" [formGroup]="loginForm" (submit)="testloginUser()" novalidate>
+  <form *ngIf="initState" [formGroup]="loginForm" (submit)="login()" novalidate>
 
     <ion-label color='primary' stacked>Email</ion-label>
     <ion-input formControlName="email" type="email" placeholder="username@domain.com" [class.invalid]="!loginForm.controls.email.valid && loginForm.controls.email.dirty">

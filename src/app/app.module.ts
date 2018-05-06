@@ -4,7 +4,7 @@ import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { IonicStorageModule } from '@ionic/storage';
 import { StatusBar } from '@ionic-native/status-bar';
-
+import { HttpClientModule } from '@angular/common/http';
 import { Geolocation } from '@ionic-native/geolocation';
 //import { BrowserTab} from '@ionic-native/browser-tab';
 import {
@@ -22,9 +22,7 @@ import { OneSignal} from '@ionic-native/onesignal';
 import { Diagnostic } from '@ionic-native/diagnostic';
 
 //providers
-import { AuthProvider } from '../providers/auth/auth';
 import { EventProvider } from '../providers/event/event';
-import { ProfileProvider } from '../providers/profile/profile';
 import { MapContainerProvider } from '../providers/map-container/map-container';
 import { NativeMapContainerProvider } from '../providers/map-native-container/map-native-container';
 import { GeocoderProvider } from '../providers/geocoder/geocoder';
@@ -59,7 +57,8 @@ firebase.initializeApp(firebaseConfig);
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
-    IonicStorageModule.forRoot()
+    IonicStorageModule.forRoot(),
+    HttpClientModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -70,9 +69,9 @@ firebase.initializeApp(firebaseConfig);
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    AuthProvider,
+    // AuthProvider,
     AnimControlProvider,
-    ProfileProvider,
+    // ProfileProvider,
     GeocoderProvider,
     EventProvider,
     MapContainerProvider,

@@ -7,13 +7,11 @@ import {
   AlertController, MenuController } from 'ionic-angular';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { EmailValidator } from '../../validators/email';
-import { AuthProvider } from '../../providers/auth/auth';
 import { IonicPage } from 'ionic-angular';
-import { ProfileProvider } from '../../providers/profile/profile';
-import { NativeMapContainerProvider } from '../../providers/map-native-container/map-native-container';
 import { Diagnostic } from '@ionic-native/diagnostic';
 
-// import { UserLoginModel } from '../../models/userLoging';
+import { Auth02Provider } from '../../providers/auth/auth02';
+import { Profile02Provider } from '../../providers/profile/profile02';
 
 @IonicPage()
 @Component({
@@ -24,10 +22,17 @@ export class LoginPage {
   public loginForm: FormGroup;
   loading: Loading;
   public initState: boolean =  false;
+  public rootPage: string = 'ClientIndexPage';
 
-  constructor(public navCtrl: NavController, public ntP: NativeMapContainerProvider,  public platform: Platform, public diagnostic: Diagnostic, public menu: MenuController, public loadingCtrl: LoadingController, 
-    public alertCtrl: AlertController, public authProvider: AuthProvider, public ph: ProfileProvider,
-    public formBuilder: FormBuilder) {
+  constructor(public navCtrl: NavController, 
+    public platform: Platform, 
+    public diagnostic: Diagnostic, 
+    public menu: MenuController, 
+    public loadingCtrl: LoadingController, 
+    public alertCtrl: AlertController, 
+    public formBuilder: FormBuilder, 
+    public auth02Provider: Auth02Provider,
+    public profile02Provider: Profile02Provider) {
       menu.swipeEnable(false, 'menu1');
       this.loginForm = formBuilder.group({
         email: ['', Validators.compose([Validators.required, EmailValidator.isValid])],
@@ -37,42 +42,25 @@ export class LoginPage {
   }
 
   ionViewDidLoad(){
-  this.checkForGPS()
  }
 
-  checkForGPS(){
-   this.ntP.checkGps();
-  }
-
-  checkerLogin() { 
-    // console.log('Test Loger');
-    // this.authProvider.createUser('terttt@mail.com', '000125ss')
-    // .then( authData => {
-    //   console.log(authData);
-    // }, error => { console.log(error); });
-
-  }
-  queryLogin() { 
-    // console.log('Test Loger');
-    // this.authProvider.queryUser();
-    this.navCtrl.setRoot('SignupPage')
-
-  }
-  
-  loginUser() {
-    if (!this.loginForm.valid){
-      console.log(this.loginForm.value);
-    } else {      
-      this.authProvider.loginUser(this.loginForm.value.email, this.loginForm.value.password)
+  login(){
+    if (this.loginForm.valid){     
+      this.auth02Provider.loginUser(this.loginForm.value.email, this.loginForm.value.password)
       .then( authData => {
         this.loading.dismiss().then( () => {
-          this.ph.getUserProfile().on('value', userProfileSnapshot => {
-            let phone = userProfileSnapshot.val().phoneNumber
-              if (phone == null)
-              this.navCtrl.setRoot('StartupPage');
-              else
-              this.navCtrl.setRoot('HomePage');
-          })
+          var profile = this.profile02Provider.getUserProfile();
+
+          if (!profile) {
+            return;
+          }
+          
+          if (profile.IsPassenger) {
+            this.navCtrl.setRoot('ClientIndexPage');            
+          } else {
+            this.rootPage = 'DriverIndexPage'
+            this.navCtrl.setRoot('DriverIndexPage');            
+          }
         });
       }, error => {
         this.loading.dismiss().then( () => {
@@ -92,12 +80,13 @@ export class LoginPage {
       this.loading.present();
     }
   }
-
-  goToSignup(): void {
+  
+  goToSignup() {
+    this.navCtrl.setRoot('SignupPage')
     // this.navCtrl.push('LoginEntrancePage');
   }
 
-  goToResetPassword(): void {
+  goToResetPassword() {
     this.navCtrl.push('ResetPasswordPage');
   }
 

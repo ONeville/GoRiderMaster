@@ -1,7 +1,7 @@
 import { Injectable, ViewChild, Injector} from '@angular/core';
 import { AlertController, ModalController, LoadingController, Loading, NavController } from 'ionic-angular';
 import { NativeMapContainerProvider } from '../../providers/map-native-container/map-native-container';
-import { ProfileProvider } from '../../providers/profile/profile';
+import { Profile02Provider } from '../../providers/profile/profile02';
 import { AnimControlProvider } from '../../providers/anim-control/anim-control';
 import firebase from 'firebase';
 import { Storage } from '@ionic/storage';
@@ -22,7 +22,7 @@ export class PopUpProvider {
   public allowed: boolean = true;
   public uid: any;
 
-  constructor( protected injector: Injector, public storage: Storage, public cMap: NativeMapContainerProvider,  public alert: AlertController, public ph: ProfileProvider, public load: LoadingController, public anim: AnimControlProvider) {
+  constructor( protected injector: Injector, public storage: Storage, public cMap: NativeMapContainerProvider,  public alert: AlertController, public ph: Profile02Provider, public load: LoadingController, public anim: AnimControlProvider) {
    
   }
    

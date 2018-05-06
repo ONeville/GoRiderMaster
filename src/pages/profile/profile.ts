@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, AlertController } from 'ionic-angular';
-import { ProfileProvider } from '../../providers/profile/profile';
-import { AuthProvider } from '../../providers/auth/auth';
+import { Profile02Provider } from '../../providers/profile/profile02';
+import { Auth02Provider } from '../../providers/auth/auth02';
 import { IonicPage } from 'ionic-angular';
 @IonicPage()
 @Component({
@@ -16,16 +16,16 @@ export class ProfilePage {
   public home: any;
 
   constructor(public navCtrl: NavController, public alertCtrl: AlertController, 
-    public ph: ProfileProvider, public authProvider: AuthProvider) {}
+    public ph: Profile02Provider, public authProvider: Auth02Provider) {}
 
   ionViewDidEnter() {
-    this.ph.getUserProfile().on('value', userProfileSnapshot => {
-      this.userProfile = userProfileSnapshot.val();
-      this.phoneNumber = userProfileSnapshot.val().phoneNumber;
-      this.home = userProfileSnapshot.val().home;
-      this.work = userProfileSnapshot.val().work;
+    // this.ph.getUserProfile().on('value', userProfileSnapshot => {
+    //   this.userProfile = userProfileSnapshot.val();
+    //   this.phoneNumber = userProfileSnapshot.val().phoneNumber;
+    //   this.home = userProfileSnapshot.val().home;
+    //   this.work = userProfileSnapshot.val().work;
       
-    });
+    // });
   }
 
   logOut(): void {
@@ -51,7 +51,7 @@ export class ProfilePage {
           text: 'Save',
           handler: data => {
             console.log(data)
-            this.ph.UpdateNumber(data);
+            //this.ph.UpdateNumber(data);
           }
         }
       ]

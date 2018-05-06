@@ -1,18 +1,49 @@
-<!--
-  Generated template for the ClientIndexPage page.
 
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
-<ion-header>
+<ion-header  no-border>
+    <ion-navbar color="nav-color">
+       <button ion-button menuToggle>
+          <ion-icon name="menu"></ion-icon>
+       </button>
+       <!-- <ion-title [ngStyle]="{'font-size': 1.32 + 'em', 'text-align': 'center'}" [hidden]="!pop.onRequest" id="header" >Please Wait..</ion-title> -->
+       <ion-title>
+          C O R I A - P
+       </ion-title>
+    </ion-navbar>
+ </ion-header>
+ <ion-content class="no-scroll">
+    <div id="map">
+       <div class="bars">
+            <ion-list class="locaction-control">
+                    <ion-item no-lines (click)="showAddressModal(currentLocationControl.id)">
+                        <ion-icon name="ios-search-outline" item-start small></ion-icon>
+                            {{ currentLocationControl.label }}
+                        <ion-icon [name]="currentLocationControl.icon" item-end></ion-icon>
+                    </ion-item>
+                    <ion-item no-lines (click)="showAddressModal(destinationLocationControl.id)">
+                            <ion-icon name="ios-search-outline" item-start small></ion-icon>
+                                {{ destinationLocationControl.label }}
+                            <ion-icon [name]="destinationLocationControl.icon" item-end></ion-icon>
+                        </ion-item>
+            </ion-list>
+            <!-- <div class="bars-position">
+                <ion-icon name="navigate"></ion-icon>
+            </div> -->
+       </div>
 
-  <ion-navbar>
-    <ion-title>client-index</ion-title>
-  </ion-navbar>
+       <button  *ngIf="onRequest" no-lines class="bar" id='onbar' ion-item (click)="findDrivers()">
+        Find Drivers around
+          <ion-icon color='light' class="icon" name="arrow-dropright"></ion-icon>
+       </button>
 
-</ion-header>
+       <!-- <div *ngIf="cMap.onbar2" class="bottom-bar2">
+          <div class="text" text-center>
+             <ion-spinner name="crescent"></ion-spinner>
+             Finding A Driver
+          </div>
+          <button class="gutton" ion-item color="primary" (click)="cancelRequest()">
+          Cancel Request
+          </button>
+       </div> -->
 
-
-<ion-content padding>
-
-</ion-content>
+    </div>
+ </ion-content>
