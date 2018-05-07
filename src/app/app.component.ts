@@ -64,7 +64,13 @@ export class MyApp implements OnInit {
   }
 
   gotoProfile(){
-    this.nav.push('ProfilePage');
+    var profile = this.profile02.getUserProfile();
+    //console.log(profile);
+    if (profile.IsPassenger) {
+      this.nav.push('ClientProfilePage');
+    } else {
+      //this.nav.push('ProfilePage');
+    }
   }
 
   logOut() {

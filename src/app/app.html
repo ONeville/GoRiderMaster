@@ -1,4 +1,4 @@
-<ion-menu [content]="content" id="menu1">
+<ion-menu [content]="content" id="menu1" class="no-scroll">
   
     <ion-content class="main">
 
@@ -33,7 +33,7 @@
           {{p.title}}
         </button>
 
-        <button ion-button block (click)="logOut()">
+        <button ion-button block class="bt-logout" (click)="logOut()">
           Sign Out
         </button>
       </ion-list>
