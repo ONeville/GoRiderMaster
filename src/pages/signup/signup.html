@@ -23,23 +23,21 @@
     </ion-input>
 <!-- [(ngModel)]="catchSexSelection" [ngModelOptions]="{standalone: true}" -->
     <ion-list radio-group formControlName="isPassenger" [(ngModel)]="value">
-      <!-- <ion-item>
-        <ion-label>Are you passenger ?</ion-label>
-        <ion-radio></ion-radio>
-      </ion-item>
-  
-      <ion-item>
-        <ion-label>Are you driver ?</ion-label>
-        <ion-radio [value]=""></ion-radio>
-      </ion-item> -->
-
       <ion-item *ngFor="let option of userTypes" >
           <ion-label>{{option.label}}</ion-label>
           <ion-radio  value="{{option.value}}"></ion-radio>
       </ion-item>
-
     </ion-list>
-
+    <!-- <ion-list>
+      <ion-item>
+        <ion-label>Are you</ion-label>
+        <ion-select formControlName="isPassenger" [(ngModel)]="value" 
+          [class.invalid]="!signupForm.controls.isPassenger.valid && signupForm.controls.isPassenger.dirty">
+          <ion-option value="Client">Passenger</ion-option>
+          <ion-option value="Driver">Driver</ion-option>
+        </ion-select>
+      </ion-item>
+    </ion-list> -->
   <button padding ion-button block type="submit" [disabled]="!signupForm.valid">
     Next
   </button>

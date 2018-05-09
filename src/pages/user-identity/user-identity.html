@@ -1,8 +1,8 @@
 <ion-header no-border>
   <ion-navbar color="nav-color">
-    <ion-title>
+    <!-- <ion-title>
       Add Your Phone Number
-    </ion-title>
+    </ion-title> -->
   </ion-navbar>
 </ion-header>
 
@@ -12,7 +12,7 @@
   <form [formGroup]="profileForm" (submit)="save()" novalidate>
    
 
-    <ion-label text-center color="primary" paddding stacked>FirstName</ion-label>
+    <ion-label text-center color="primary" paddding stacked></ion-label>
     <ion-input formControlName="firstName" type="tel" placeholder="Your first name" 
       [class.invalid]="!profileForm.controls.firstName.valid && profileForm.controls.firstName.dirty">
     </ion-input>
@@ -22,7 +22,7 @@
       <p>required</p>
     </ion-item>
 
-    <ion-label text-center color="primary" paddding stacked>LastName</ion-label>
+    <ion-label text-center color="primary" paddding stacked></ion-label>
     <ion-input formControlName="lastName" type="tel" placeholder="Your last name" 
       [class.invalid]="!profileForm.controls.lastName.valid && profileForm.controls.lastName.dirty">
     </ion-input>
@@ -32,7 +32,7 @@
       <p>required</p>
     </ion-item>
 
-    <ion-label text-center color="primary" paddding stacked>PhoneNumber</ion-label>
+    <ion-label text-center color="primary" paddding stacked></ion-label>
     <ion-input formControlName="phone" type="tel" placeholder="Your phone number" 
       [class.invalid]="!profileForm.controls.phone.valid && profileForm.controls.phone.dirty">
     </ion-input>
@@ -44,7 +44,8 @@
 
 
     <button padding ion-button block type="submit" [disabled]="!profileForm.valid">
-      Finish
+        <ion-icon name="save"></ion-icon>
+      Save
     </button>
 
   </form>

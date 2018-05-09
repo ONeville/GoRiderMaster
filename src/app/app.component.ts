@@ -9,8 +9,8 @@ import { Auth02Provider } from '../providers/auth/auth02';
 import { Profile02Provider } from '../providers/profile/profile02';
 
 import { UserLoginModel } from '../models/userLoging';
-import { PassengerProfileModel } from '../models/passengerProfile';
-import { DriverProfileModel } from '../models/driverProfile';
+// import { PassengerProfileModel } from '../models/passengerProfile';
+// import { DriverProfileModel } from '../models/driverProfile';
 
 @Component({
   templateUrl: 'app.html'
@@ -65,12 +65,7 @@ export class MyApp implements OnInit {
 
   gotoProfile(){
     var profile = this.profile02.getUserProfile();
-    //console.log(profile);
-    if (profile.IsPassenger) {
-      this.nav.push('ClientProfilePage');
-    } else {
-      //this.nav.push('ProfilePage');
-    }
+    this.nav.push('UserIdentityPage', { paramData: "edit" });
   }
 
   logOut() {

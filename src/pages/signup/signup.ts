@@ -19,11 +19,11 @@ import { Profile02Provider } from '../../providers/profile/profile02';
 export class SignupPage {
   public signupForm: FormGroup;
   loading: Loading;
-
+  userType: string;
   
   userTypes: any = [
-    { label: 'Are you passenger ?', value: true },
-    { label: 'Are you driver ?', value: false }
+    { label: 'Are you passenger ?', value: "Client" },
+    { label: 'Are you driver ?', value: "Driver" }
   ]
 
   constructor(public navCtrl: NavController,  
@@ -40,44 +40,13 @@ export class SignupPage {
       });
     }
 
-  signupUser(){
-    // if (!this.signupForm.valid){
-    //   console.log(this.signupForm.value);
-    // } else {
-    //   this.authProvider.signupUser(this.signupForm.value.email, this.signupForm.value.password)
-    //   .then(() => {
-    //     this.loading.dismiss().then( () => {
-    //       if (this.ph.phone == null)
-    //         this.navCtrl.push('StartupPage');
-    //         else
-    //         this.navCtrl.setRoot('HomePage');
-    //     });
-    //   }, (error) => {
-    //     this.loading.dismiss().then( () => {
-    //       let alert = this.alertCtrl.create({
-    //         message: error.message,
-    //         buttons: [
-    //           {
-    //             text: "Ok",
-    //             role: 'cancel'
-    //           }
-    //         ]
-    //       });
-    //       alert.present();
-    //     });
-    //   });
-    //   this.loading = this.loadingCtrl.create();
-    //   this.loading.present();
-    // }
-  }
-
   createUser(){
     if (this.signupForm.valid){
-        if (this.signupForm.value.isPassenger) {
+        if (this.signupForm.value.isPassenger === "Client") {
           this.authV2.AddPassengerLogin(this.signupForm.value.email, this.signupForm.value.password)
           .then(() => {
             this.loading.dismiss().then( () => { 
-              this.navCtrl.push('UserProfilePage'); 
+              this.navCtrl.push('UserIdentityPage', { edit: false }); 
             });
           }, (error) => { 
             this.loading.dismiss().then( () => {
@@ -95,11 +64,11 @@ export class SignupPage {
           });
         }
 
-        if (!this.signupForm.value.isPassenger) {
+        if (this.signupForm.value.isPassenger === "Driver") {
           this.authV2.AddDriverLogin(this.signupForm.value.email, this.signupForm.value.password)
           .then(() => {
               this.loading.dismiss().then( () => { 
-                this.navCtrl.push('UserProfilePage'); });
+                this.navCtrl.push('UserIdentityPage'); });
           }, (error) => { 
             this.loading.dismiss().then( () => {
               let alert = this.alertCtrl.create({

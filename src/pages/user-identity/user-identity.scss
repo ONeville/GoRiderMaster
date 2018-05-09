@@ -1,4 +1,4 @@
-page-user-profile {
+page-user-identity {
     ion-content{
         background-size: cover;
         background: linear-gradient(color($colors, toper, base), color($colors, lighters, base), color($colors, doper, base)) , url($myUrl)no-repeat center center fixed;
@@ -36,5 +36,4 @@ page-user-profile {
             color: #FF6153;
           }
     }
-    
 }
