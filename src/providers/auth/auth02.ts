@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import  firebase from 'firebase';
 import { Platform } from 'ionic-angular';
+import { Storage } from '@ionic/storage';
 
 import { UserLoginModel } from '../../models/userLoging';
 
@@ -13,7 +14,7 @@ export class Auth02Provider {
   private currentUser: firebase.User;
 
   
-  constructor(public platform: Platform) {
+  constructor(public platform: Platform, private storage: Storage) {
      this.userRef = firebase.database().ref('/userModel');
      this.passengerRef = firebase.database().ref('/passengerModel');
      this.driverRef = firebase.database().ref('/driverModel');
@@ -62,6 +63,10 @@ export class Auth02Provider {
 
   get authenticated(): boolean {
     return this.currentUser !== null;
+  }
+
+  keepAuthe() {
+    this.storage.set('name', 'Max');
   }
 
   signOut(): void {

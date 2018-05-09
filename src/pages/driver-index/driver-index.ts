@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
+import { RiderState } from '../../models/enums';
 /**
  * Generated class for the DriverIndexPage page.
  *
@@ -14,6 +15,8 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   templateUrl: 'driver-index.html',
 })
 export class DriverIndexPage {
+  driverStatus: RiderState;
+  isAvailable: boolean = true;
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
@@ -22,4 +25,7 @@ export class DriverIndexPage {
     console.log('ionViewDidLoad DriverIndexPage');
   }
 
+  notify() {
+    console.log("Toggled: "+ this.isAvailable); 
+  }
 }

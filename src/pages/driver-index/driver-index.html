@@ -12,16 +12,17 @@
  <ion-content class="no-scroll">
     <div id="map">
        <div class="bars">
-            <ion-list class="locaction-control">
-                <ion-item no-lines >
-                    <ion-icon name="ios-search-outline" item-start small></ion-icon>
-                        TODO chauffa
-                    <ion-icon name="ios-car" item-end></ion-icon>
-                </ion-item>
-            </ion-list>
-            <!-- <div class="bars-position">
-                <ion-icon name="navigate"></ion-icon>
-            </div> -->
+            <ion-item>
+                 <ion-label>Available</ion-label>
+                 <ion-toggle color="gery" [(ngModel)]="isAvailable" (ionChange)="notify()"></ion-toggle>
+                 <!-- <ion-toggle color="gery" [checked]="isAvailable" [(ngModel)]="isAvailable"></ion-toggle> -->
+             </ion-item>
+       </div>
+
+
+       <div class="bars locaction-control">
+             <ion-spinner padding icon="dots" class="spinner-md-dots-color"></ion-spinner>
+             <p>Listing request...</p>
        </div>
 
        <button  *ngIf="onRequest" no-lines class="bar" id='onbar' ion-item (click)="findDrivers()">

@@ -5,7 +5,13 @@ page-driver-index {
      
       ion-content {
     
-    
+        ion-spinner * {
+          width: 28px;
+          height: 28px;
+          stroke: #444;
+          fill: #222;
+        }
+        
         @keyframes left_right {
           0%   {left: 75%;}
          

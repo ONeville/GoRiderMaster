@@ -1,5 +1,5 @@
 import { Component, ViewChild, NgZone, OnInit } from '@angular/core';
-import { Platform, Nav, Loading, LoadingController } from 'ionic-angular';
+import { Platform, Nav, LoadingController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { OneSignal } from '@ionic-native/onesignal';
@@ -7,10 +7,8 @@ import * as firebase from 'firebase/app';
 
 import { Auth02Provider } from '../providers/auth/auth02';
 import { Profile02Provider } from '../providers/profile/profile02';
-
 import { UserLoginModel } from '../models/userLoging';
-// import { PassengerProfileModel } from '../models/passengerProfile';
-// import { DriverProfileModel } from '../models/driverProfile';
+
 
 @Component({
   templateUrl: 'app.html'
@@ -24,21 +22,39 @@ export class MyApp implements OnInit {
   public rootPage: string = 'ClientIndexPage';
   phone: any;
   pages: Array<{ title: string, component: any, icon: string }>
+  currentUser: UserLoginModel;
 
   photoURL: string
   
   constructor(public zone: NgZone,  public loadingCtrl: LoadingController, private One: OneSignal, public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public profile02: Profile02Provider,  private authO2: Auth02Provider) {
+    this.currentUser = this.profile02.getUserProfile();    
     this.initializeApp();
+    
   }
 
   ngOnInit(): void {
-    this.pages = [
-      { title: 'Promo', component: 'PromoPage', icon: "trophy" },
-      { title: 'History', component: 'HistoryPage', icon: "clock" },
-      { title: 'Payment', component: 'PaymentPage', icon: "card" },
-      { title: 'Support', component: 'SupportPage', icon: "help-circle" },
-      { title: 'About', component: 'AboutPage', icon: "information-circle" }
-    ];
+    
+    if (!this.currentUser) {
+      this.rootPage = 'LoginPage';
+      this.nav.push('LoginPage');
+    }else{    
+      this.rootPage = this.currentUser.IsPassenger ? 'ClientIndexPage' : 'DriverIndexPage';
+      if (this.currentUser.IsPassenger) {
+        this.pages = [
+          { title: 'History', component: 'HistoryPage', icon: "clock" },
+          { title: 'Favorite', component: 'FavoritePage', icon: "help-circle" },
+          { title: 'About', component: 'AboutPage', icon: "information-circle" }
+        ];
+        
+      } else {
+        this.pages = [
+          { title: 'History', component: 'HistoryPage', icon: "clock" },
+          { title: 'Payment', component: 'PaymentPage', icon: "card" },
+          { title: 'Support', component: 'SupportPage', icon: "help-circle" },
+          { title: 'About', component: 'AboutPage', icon: "information-circle" }
+        ];
+      }
+    }
   }
 
   initializeApp() {
@@ -48,6 +64,9 @@ export class MyApp implements OnInit {
     this.One.inFocusDisplaying(this.One.OSInFocusDisplayOption.Notification);
     this.One.setSubscription(true);
     this.One.endInit();  
+    if (!this.currentUser) {
+      this.nav.push('LoginPage');
+    }
     this.statusBar.styleDefault();
     this.statusBar.backgroundColorByHexString("#BBBBBB");
     setTimeout(() => {
@@ -64,14 +83,12 @@ export class MyApp implements OnInit {
   }
 
   gotoProfile(){
-    var profile = this.profile02.getUserProfile();
     this.nav.push('UserIdentityPage', { paramData: "edit" });
   }
 
   logOut() {
     this.authO2.logoutUser().then(() => {
       this.nav.push('LoginPage');
-      //this.navCtrl.setRoot('LoginPage');
     });
   }
 }
