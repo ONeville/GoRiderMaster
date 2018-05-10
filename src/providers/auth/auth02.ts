@@ -61,12 +61,18 @@ export class Auth02Provider {
   }
 
 
-  get authenticated(): boolean {
-    return this.currentUser !== null;
+
+  authenticated(key) {
+    //.then((value) => {})
+    return this.storage.get(key);
   }
 
-  keepAuthe() {
-    this.storage.set('name', 'Max');
+  keepAuthe(key, valaue) {
+    this.storage.set(key, valaue);
+  }
+
+  detachAuthe(key) {
+    this.storage.remove(key);
   }
 
   signOut(): void {

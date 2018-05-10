@@ -1,34 +1,10 @@
-// interface UserModel {
-//     id: string,
-//     email: string,
-//     password: string
-// }
-
-// interface PassengerProfileModel {
-//     profileId: string,
-//     userId: string,
-//     FirstName: string,
-//     LastName: string,
-//     Phone: string
-// }
-
-// interface DriverProfileModel {
-//     driverId: string,
-//     userId: string,
-//     FirstName: string,
-//     LastName: string,
-//     Phone: string
-// }
-
-
-// interface RequestModel {
-//     id: string,
-//     email: string,
-//     password: string
-// }
-
-// interface member {
-//     id: string,
-//     email: string,
-//     password: string
-// }
+export class UtilsServices {
+    
+getID() {
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    for (var i = 0; i < 5; i++)
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+    return text + '-XoM-' + Date.now().toString().replace(' ', '');
+  }
+}

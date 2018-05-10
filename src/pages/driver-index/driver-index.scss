@@ -5,13 +5,15 @@ page-driver-index {
      
       ion-content {
     
-        ion-spinner * {
-          width: 28px;
-          height: 28px;
-          stroke: #444;
-          fill: #222;
+        .request-spinner{
+          margin: 0 auto;
+          text-align: center;
+          //margin-top: 
         }
-        
+        .request{
+          margin-top: 5px;
+          margin-bottom: 5px;
+        }
         @keyframes left_right {
           0%   {left: 75%;}
          

@@ -20,6 +20,7 @@ declare var google;
 
 import { Auth02Provider } from '../../providers/auth/auth02';
 import { PassengerProfileModel } from '../../models/passengerProfile';
+import { UtilsServices } from '../../models/model';
 
 
 
@@ -48,6 +49,7 @@ export class ClientIndexPage {
   locationLatLng: any;
   destinationLatLng: any;
   geocoder: any = new google.maps.Geocoder;
+  utils: UtilsServices;
 
   constructor(public navCtrl: NavController, public navParams: NavParams
     , private profileProvider: Profile02Provider
@@ -55,6 +57,7 @@ export class ClientIndexPage {
     , private modalCtrl: ModalController
     , private geoFire: GeofireProvider
     ) {
+      this.utils = new UtilsServices()
   }
 
   ionViewDidLoad() {
@@ -122,7 +125,7 @@ export class ClientIndexPage {
 
     let startLatLng = this.locationLatLng
     let destLatLng = this.destinationLatLng
-    let locationLb = this.getLocationUID() + '-C-' + Date.now().toString().replace(' ', '');
+    let locationLb = this.utils.getID();
 
      if (startLatLng === undefined){
          if (navigator.geolocation) {
@@ -156,14 +159,6 @@ export class ClientIndexPage {
         //console.log('XY: ' + JSON.stringify(data));
         this.navCtrl.push('LookupPage', { locations: data });
       }
-  }
-
-  getLocationUID() {
-    var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    for (var i = 0; i < 5; i++)
-      text += possible.charAt(Math.floor(Math.random() * possible.length));
-    return text;
   }
 
 }

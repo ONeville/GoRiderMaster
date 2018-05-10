@@ -50,10 +50,10 @@ export class LoginPage {
       .then( authData => {
         this.loading.dismiss().then( () => {
           var profile = this.profile02Provider.getUserProfile();
-
           if (!profile) {
             return;
           }
+          this.auth02Provider.keepAuthe(profile.Id, profile.Email);
           
           if (profile.IsPassenger) {
             this.navCtrl.setRoot('ClientIndexPage');            

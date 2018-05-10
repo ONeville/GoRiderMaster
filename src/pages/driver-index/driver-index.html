@@ -1,44 +1,39 @@
-<ion-header  no-border>
-    <ion-navbar color="nav-color">
-       <button ion-button menuToggle>
-          <ion-icon name="menu"></ion-icon>
-       </button>
-       <!-- <ion-title [ngStyle]="{'font-size': 1.32 + 'em', 'text-align': 'center'}" [hidden]="!pop.onRequest" id="header" >Please Wait..</ion-title> -->
-       <ion-title>
-          C O R I A - Chauffa
-       </ion-title>
-    </ion-navbar>
- </ion-header>
- <ion-content class="no-scroll">
-    <div id="map">
-       <div class="bars">
-            <ion-item>
-                 <ion-label>Available</ion-label>
-                 <ion-toggle color="gery" [(ngModel)]="isAvailable" (ionChange)="notify()"></ion-toggle>
-                 <!-- <ion-toggle color="gery" [checked]="isAvailable" [(ngModel)]="isAvailable"></ion-toggle> -->
-             </ion-item>
-       </div>
+<ion-header no-border>
+      <ion-navbar color="nav-color">
+            <button ion-button menuToggle>
+                  <ion-icon name="menu"></ion-icon>
+            </button>
+            <!-- <ion-title [ngStyle]="{'font-size': 1.32 + 'em', 'text-align': 'center'}" [hidden]="!pop.onRequest" id="header" >Please Wait..</ion-title> -->
+            <ion-title>
+                  C O R I A - Chauffa
+            </ion-title>
+      </ion-navbar>
+</ion-header>
+<ion-content class="no-scroll">
+      <div id="map">
+            <div class="bars">
+                  <ion-item>
+                        <ion-label>Available</ion-label>
+                        <ion-toggle color="gery" [(ngModel)]="isAvailable" (ionChange)="notify()"></ion-toggle>
+                        <!-- <ion-toggle color="gery" [checked]="isAvailable" [(ngModel)]="isAvailable"></ion-toggle> -->
+                  </ion-item>
+            </div>
 
 
-       <div class="bars locaction-control">
-             <ion-spinner padding icon="dots" class="spinner-md-dots-color"></ion-spinner>
-             <p>Listing request...</p>
-       </div>
+            <div *ngIf="isAvailable" class="request-spinner request">
+                  <ion-spinner padding icon="dots" class="spinner-md-dots-color"></ion-spinner>
+                  <p>Listing request...</p>
+            </div>
+            <ion-list *ngIf="isAvailable">
+                  <ion-item>
+                        <ion-avatar item-start>
+                              <img src="assets/img/avatar-han.png">
+                        </ion-avatar>
+                        <h2>Woody</h2>
+                        <p>This town ain't big enough for the two of us!</p>
+                        <ion-note item-end>3:43 pm</ion-note>
+                  </ion-item>
+            </ion-list>
 
-       <button  *ngIf="onRequest" no-lines class="bar" id='onbar' ion-item (click)="findDrivers()">
-        Find Drivers around
-          <ion-icon color='light' class="icon" name="arrow-dropright"></ion-icon>
-       </button>
-
-       <!-- <div *ngIf="cMap.onbar2" class="bottom-bar2">
-          <div class="text" text-center>
-             <ion-spinner name="crescent"></ion-spinner>
-             Finding A Driver
-          </div>
-          <button class="gutton" ion-item color="primary" (click)="cancelRequest()">
-          Cancel Request
-          </button>
-       </div> -->
-
-    </div>
- </ion-content>
+      </div>
+</ion-content>

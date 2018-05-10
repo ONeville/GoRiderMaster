@@ -88,6 +88,7 @@ export class MyApp implements OnInit {
 
   logOut() {
     this.authO2.logoutUser().then(() => {
+      this.authO2.detachAuthe(this.currentUser.Id);
       this.nav.push('LoginPage');
     });
   }

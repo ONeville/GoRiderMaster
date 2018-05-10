@@ -28,6 +28,29 @@ export class GeofireProvider {
               .catch(err => console.log(err))
     }
  
+    setDriverLocation(key:string, coords: any) {
+
+      this.geoFire.set(key, coords)
+          .then(_ => console.log('location updated'))
+          .catch(err => console.log(err))
+    }
+
+    getDriversOnService(radius: number, drivers: any) {
+      this.geoFire.query({
+        center: drivers.coords,
+        radius: radius
+      })
+      .on('key_entered', (key, location, distance) => {
+        let hit = {
+          location: location,
+          distance: distance
+        }
+  
+        let currentHits = this.hits.value
+        currentHits.push(hit)
+        this.hits.next(currentHits)
+      })
+     }
  
     /// Queries database for nearby locations
     /// Maps results to the hits BehaviorSubject
