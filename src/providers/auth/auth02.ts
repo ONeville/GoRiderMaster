@@ -61,21 +61,26 @@ export class Auth02Provider {
   }
 
 
-
-  authenticated(key) {
-    //.then((value) => {})
-    return this.storage.get(key);
+  clearSession() {
+    this.storage.clear().then(() => { console.log('all keys cleared'); });
   }
+
+
+  // authenticated(key) {
+  //   //.then((value) => {})
+  //   return this.storage.get(key);
+  // }
 
   keepAuthe(key, valaue) {
     this.storage.set(key, valaue);
   }
 
-  detachAuthe(key) {
-    this.storage.remove(key);
-  }
+  // detachAuthe(key) {
+  //   this.storage.remove(key);
+  // }
 
   signOut(): void {
+    this.clearSession()
     firebase.auth().signOut();
   }
 

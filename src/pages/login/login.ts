@@ -12,6 +12,7 @@ import { Diagnostic } from '@ionic-native/diagnostic';
 
 import { Auth02Provider } from '../../providers/auth/auth02';
 import { Profile02Provider } from '../../providers/profile/profile02';
+import { UserType } from '../../models/enums';
 
 @IonicPage()
 @Component({
@@ -53,11 +54,13 @@ export class LoginPage {
           if (!profile) {
             return;
           }
-          this.auth02Provider.keepAuthe(profile.Id, profile.Email);
           
           if (profile.IsPassenger) {
+            this.auth02Provider.keepAuthe(UserType.Client.toString(), profile.Id);
+            this.rootPage = 'ClientIndexPage'
             this.navCtrl.setRoot('ClientIndexPage');            
           } else {
+            this.auth02Provider.keepAuthe(UserType.Driver.toString(), profile.Id);
             this.rootPage = 'DriverIndexPage'
             this.navCtrl.setRoot('DriverIndexPage');            
           }

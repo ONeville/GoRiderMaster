@@ -21,6 +21,7 @@ declare var google;
 import { Auth02Provider } from '../../providers/auth/auth02';
 import { PassengerProfileModel } from '../../models/client/passengerProfile';
 import { UtilsServices } from '../../models/model';
+import { UserType } from '../../models/enums';
 
 
 
@@ -31,7 +32,12 @@ import { UtilsServices } from '../../models/model';
   providers: [Profile02Provider, AnimControlProvider, PopUpProvider, GeocoderProvider ],
 })
 export class ClientIndexPage {
-
+  public pages = [
+    { title: 'History', component: 'HistoryPage', icon: "clock" },
+    { title: 'Favorite', component: 'FavoritePage', icon: "help-circle" },
+    { title: 'About', component: 'AboutPage', icon: "information-circle" }
+  ];
+  
   currentLocationControl: any = {
     id: 1,
     label: 'Your location',
@@ -58,6 +64,7 @@ export class ClientIndexPage {
     , private geoFire: GeofireProvider
     ) {
       this.utils = new UtilsServices()
+      this.profileProvider.authenticated(UserType.Client.toString())
   }
 
   ionViewDidLoad() {

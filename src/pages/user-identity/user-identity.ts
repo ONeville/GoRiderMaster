@@ -14,8 +14,8 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { Profile02Provider } from '../../providers/profile/profile02';
 
 import { UserLoginModel } from '../../models/userLoging';
-import { PassengerProfileModel } from '../../models/passengerProfile';
-import { DriverProfileModel } from '../../models/driverProfile';
+import { PassengerProfileModel } from '../../models/client/passengerProfile';
+import { DriverProfileModel } from '../../models/driver/driverProfile';
 import { IdentityProfileService } from '../../models/identityProfile-service'
 
 /**
@@ -113,7 +113,7 @@ export class UserIdentityPage implements OnInit {
             loading.dismiss().then(suc =>{
             this.profile.updateDisplayProfile(this.currentUser.Id, this.profileForm.value.firstName)
             this.stB.show();
-            this.navCtrl.setRoot('ClientIndexPage')
+            this.navCtrl.setRoot('LoginPage')
           })
           });
         
@@ -131,13 +131,13 @@ export class UserIdentityPage implements OnInit {
             loading.dismiss().then(suc =>{
               this.profile.updateDisplayProfile(this.currentUser.Id, this.profileForm.value.firstName)
             this.stB.show();
-            this.navCtrl.setRoot('DriverIndexPage')
+            this.navCtrl.setRoot('LoginPage')
           })
           });
         
       }
     }
-
+    this.profile.clear();
   }
 
   updateProfile(loading) {

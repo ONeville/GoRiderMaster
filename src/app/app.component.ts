@@ -8,6 +8,7 @@ import * as firebase from 'firebase/app';
 import { Auth02Provider } from '../providers/auth/auth02';
 import { Profile02Provider } from '../providers/profile/profile02';
 import { UserLoginModel } from '../models/userLoging';
+import { UserType } from '../models/enums';
 
 
 @Component({
@@ -21,15 +22,27 @@ export class MyApp implements OnInit {
   public fireAuth:firebase.auth.Auth;
   public rootPage: string = 'ClientIndexPage';
   phone: any;
-  pages: Array<{ title: string, component: any, icon: string }>
+  public pages: Array<{ title: string, component: any, icon: string }>
   currentUser: UserLoginModel;
 
   photoURL: string
   
   constructor(public zone: NgZone,  public loadingCtrl: LoadingController, private One: OneSignal, public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public profile02: Profile02Provider,  private authO2: Auth02Provider) {
-    this.currentUser = this.profile02.getUserProfile();    
-    this.initializeApp();
     
+    this.profile02.authenticated(UserType.Driver.toString())
+    this.currentUser = this.profile02.getUserProfile();
+
+    if (!this.currentUser) {
+      this.profile02.authenticated(UserType.Client.toString())
+      this.currentUser = this.profile02.getUserProfile();
+    }
+
+    if (!this.currentUser) {
+      this.rootPage = 'LoginPage';
+      // this.nav.push('LoginPage');
+    }
+
+    this.initializeApp();    
   }
 
   ngOnInit(): void {
@@ -88,7 +101,8 @@ export class MyApp implements OnInit {
 
   logOut() {
     this.authO2.logoutUser().then(() => {
-      this.authO2.detachAuthe(this.currentUser.Id);
+      // this.authO2.detachAuthe(this.currentUser.Id);
+      this.authO2.clearSession();
       this.nav.push('LoginPage');
     });
   }

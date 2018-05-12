@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import firebase from 'firebase';
+import { Storage } from '@ionic/storage';
 
 import { UserLoginModel } from '../../models/userLoging';
-import { PassengerProfileModel } from '../../models/passengerProfile';
-import { DriverProfileModel } from '../../models/driverProfile';
+import { UserType } from '../../models/enums';
+import { PassengerProfileModel } from '../../models/client/passengerProfile';
+import { DriverProfileModel } from '../../models/driver/driverProfile';
 
 @Injectable()
 export class Profile02Provider {
@@ -12,7 +14,7 @@ export class Profile02Provider {
   private passengerModel: PassengerProfileModel;
   private driverModel: DriverProfileModel;
 
-  constructor() {
+  constructor(private storage: Storage) {
     this.initAuth();
   }
 
@@ -32,10 +34,37 @@ export class Profile02Provider {
       }
     });
   }
+  authenticated(key) {
+    //.then((value) => {})
+    // var profile = this.storage.get(UserType.Driver.toString()) || this.storage.get(UserType.Client.toString())
+    // if (profile) {
+    //   profile.then((value) => {
+    //     // var json = '{"result":true, "count":42}';
+    //     var obj = JSON.parse(value);
+    //     this.initUser(value);
+    //   });
+    // }
+
+    this.storage.get(key).then((value) => {  this.initUser(value);   });
+  }
+
+  keepAuthe(key, valaue) {
+    this.storage.set(key, valaue);
+  }
+
+  detachAuthe(key) {
+    this.storage.remove(key);
+  }
+  clear() {
+    this.storage.clear().then(() => { console.log('all keys cleared'); });
+  }
 
   initUser(id){
     var userLogged = firebase.database().ref(`userModel/${id}`);
     userLogged.on('value', snap => {
+      if (!snap.exists()) {
+        return;
+      }
      this.userModel = new UserLoginModel()
      this.userModel.setUser(id, snap.val().email, snap.val().isPassenger, snap.val().displayName);
       if (snap.val().isPassenger) {
@@ -98,6 +127,7 @@ export class Profile02Provider {
   }
 
   getUserProfile() {
+
     return this.userModel;
   }
 

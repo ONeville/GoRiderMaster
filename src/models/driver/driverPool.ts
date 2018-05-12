@@ -1,6 +1,6 @@
 import { RiderState } from '../enums'
 export class DriverPoolModel {
-    public Id: string = '0'    
+    // public Id: string = '0'    
     public DriverId: string
     public DriverStatus: number
     public Quote: number
@@ -10,8 +10,8 @@ export class DriverPoolModel {
  
     }
 
-    setModel(id, driver, status, quote, location, statusTime){
-        this.Id = id;
+    setModel(driver, status, quote, location, statusTime){
+        // this.Id = id;
         this.DriverId = driver;
         this.DriverStatus = status;
         this.Quote = quote;
@@ -21,7 +21,7 @@ export class DriverPoolModel {
  
     getModel(){
         return {
-            id: this.Id,   
+            // id: this.Id,   
             driverId: this.DriverId,
             driverStatus: this.DriverStatus,
             price: this.Quote,
