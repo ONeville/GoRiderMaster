@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import * as firebase from 'firebase/app';
 import * as GeoFire from "geofire";
 import { BehaviorSubject } from 'rxjs/BehaviorSubject'
+import { DriverPoolModel, DriverPoolService } from '../../models/driver/driverPool';
 /*
   Generated class for the GeofireProvider provider.
 
@@ -16,28 +17,31 @@ export class GeofireProvider {
   public hits = new BehaviorSubject([])
   
   constructor() {
-    let dbRefDb = firebase.database().ref();
-    this.geoFire = new GeoFire(dbRefDb);
+    // let dbRefDb = firebase.database().ref();
+    // this.geoFire = new GeoFire(dbRefDb);
+
+    let dbRefDbX = firebase.database().ref();
+    var riderPool = dbRefDbX.child('driverPoolModel');
+    this.geoFire = new GeoFire(riderPool);
   }
 
      /// Adds GeoFire data to database
-    setLocation(key:string, coords: Array<number>) {
-
-          this.geoFire.set(key, coords)
+  setLocation(key:string, coords: Array<number>) {
+    this.geoFire.set(key, coords)
               .then(_ => console.log('location updated'))
               .catch(err => console.log(err))
-    }
+  }
  
-    setDriverLocation(key:string, coords: any) {
+    setDriverLocation(driver: DriverPoolModel) {
 
-      this.geoFire.set(key, coords)
+      this.geoFire.set(driver)
           .then(_ => console.log('location updated'))
           .catch(err => console.log(err))
     }
 
-    getDriversOnService(radius: number, drivers: any) {
+    getDriversOnService(radius: number, coords: Array<number>) {
       this.geoFire.query({
-        center: drivers.coords,
+        center: coords,
         radius: radius
       })
       .on('key_entered', (key, location, distance) => {

@@ -1,6 +1,6 @@
 import firebase from 'firebase';
-import { PassengerProfileModel } from './passengerProfile';
-import { DriverProfileModel } from './driverProfile';
+import { PassengerProfileModel } from './client/passengerProfile';
+import { DriverProfileModel } from './driver/driverProfile';
 
 export class IdentityProfileService {
 

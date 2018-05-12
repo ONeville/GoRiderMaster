@@ -19,7 +19,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 declare var google;
 
 import { Auth02Provider } from '../../providers/auth/auth02';
-import { PassengerProfileModel } from '../../models/passengerProfile';
+import { PassengerProfileModel } from '../../models/client/passengerProfile';
 import { UtilsServices } from '../../models/model';
 
 
@@ -121,8 +121,6 @@ export class ClientIndexPage {
 
 
   findDrivers(){
-    // this.onDriverRequest = !this.onDriverRequest;
-
     let startLatLng = this.locationLatLng
     let destLatLng = this.destinationLatLng
     let locationLb = this.utils.getID();

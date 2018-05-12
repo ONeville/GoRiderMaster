@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 import { GeofireProvider } from '../../providers/geofire/geofire';
 import { UtilsServices } from '../../models/model';
+import { DriverPoolModel, DriverPoolService } from '../../models/driver/driverPool';
 import { RiderState } from '../../models/enums';
 /**
  * Generated class for the DriverIndexPage page.
